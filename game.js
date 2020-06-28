@@ -11,7 +11,7 @@ bg1 = createBG()
 bg2 = createNextBG(bg1)
 data.push(bg1)
 data.push(bg2)
-for (let i = 2; i < 49; i++){
+for (let i = 2; i < 50; i++){
   data.push(createNextBG(data[i-1]))
 }
 console.log(data)
