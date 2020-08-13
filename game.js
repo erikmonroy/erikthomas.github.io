@@ -58,6 +58,7 @@ let y_scale = d3.scaleLinear()
 
 //create SVG element
 let svg = d3.select('.graph')
+    .append("svg")
     .attr("height","100%")
     .attr("width","100%")
 
