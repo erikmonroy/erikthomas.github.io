@@ -1,4 +1,9 @@
 //BG DATA
+
+//notes to self:
+//Could have A1C profiles for game that changes
+//probability matrix of model
+
 //Functions
 createValue = function()  {
   return Math.ceil(Math.random()*40+80)
@@ -26,11 +31,35 @@ for (let i = 2; i < 50; i++){
 }
 
 // //HIDDEN MARKOV MODEL
-// const stableProb = [0.8,0.2]
-// const fallingProb = [0.1,0.9]
-// const risingProb = [0.2,0.8]
-// let transProb = [stableProb,fallingProb,risingProb]
-// console.log(transProb)
+//https://github.com/cnatale/JSProbability/blob/master/ObservableMarkovModel.js
+// let omm = ProbabilityAPI.ObservableMarkovModel;
+
+// let probabilityTable = [
+//     [.8, .15, .05],
+//     [.1, .8, .1],
+//     [.1, .8, .1]
+// ];
+
+// //fake an enum for readability
+// let states = {
+//     stable:0,
+//     rising:1,
+//     falling:2
+// };
+
+// let result=0;
+// let probabilities = [];
+// probabilities[0] = omm.getProbability([states.rising, states.falling, states.falling], probabilityTable);
+
+// probabilities[1] =  omm.getProbability([states.rising, states.stable, states.falling], probabilityTable);
+
+
+// probabilities[2] =  omm.getProbability([states.rising, states.rising, states.falling], probabilityTable);
+
+// for(let i=0; i < probabilities.length; i++){
+//    result += probabilities[i];
+// }
+
 
 //d3 viz
 //1. PREP
