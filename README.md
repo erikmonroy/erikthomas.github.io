@@ -6,7 +6,7 @@
 * Progress
 
 ### General info
-An evolving project that aims to distinguish domain knowledge and transfer learning among those who have lived with diabtes. This work is the culmination of my senior thesis for the Vassar College Cognitive Science Department and is under the supervision of Dr. Joshua de Leuuw.
+An evolving project that aims to distinguish domain knowledge and transfer learning among those who have lived with diabetes. This work is the culmination of my senior thesis for the Vassar College Cognitive Science Department and is under the supervision of Dr. Joshua de Leuuw.
 
 ### Tech
 Project is created with:
