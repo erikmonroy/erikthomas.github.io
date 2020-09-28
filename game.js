@@ -1,34 +1,119 @@
 //BG DATA
-
 //notes to self:
 //Could have A1C profiles for game that changes
 //probability matrix of model
 
-//Functions
-createValue = function()  {
-  return Math.ceil(Math.random()*40+80)
-};
-createNextValue = function(bg) {
-  return Math.ceil(jStat.normal.sample(bg,3)) 
-};
+//GLOBAL VARIABLES
+//Start button
+let button = document.getElementById("Start");
+button.addEventListener('click', Start, false);
+//circular queue
+let bgData = [];
 
-//BG Constructor
+//CONSTRUCTORS
 function BG(index, value, state) {
   this.index = index;
   this.value = value;
   this.state = state;
 };
 
-//BG data
-let bgData = []
-let bg1 = new BG(1,createValue(),"stable");
-let bg2 = new BG(2,createNextValue(bg1.value),"stable");
-bgData.push(bg1)
-bgData.push(bg2)
-for (let i = 2; i < 50; i++){
-  bg3= new BG(i+1,createNextValue(bgData[i-1].value),"stable");
-  bgData.push(bg3)
+//Circular Queue
+class Queue  {
+  maxSize;
+  currentIndex;
+  q;
+  constructor(max)  {
+    this.maxSize = max;
+    this.currentIndex = 0;
+    this.q = [maxSize];
+  }
+
+  //add element to queue
+  enqueue(data) {
+    //is queue full?
+    if (this.length == (this.max - 1))  {
+      return ("Queue is full!");
+    }
+    else  {
+      //add element to queue
+      this.queue.pop(data);
+      //increment tail pointer
+      this.tail = (this.tail + 1) % this.max;
+      return true;
+    }
+  }
+
+  //rm element from queue
+  dequeue() {
+    if (this.length == 0) {
+      return("Queue is empty!");
+    }
+    else  {
+      //fetch data
+      data = this.queue[this.head];
+      // increment head
+      this.head = (this.head + 1) % this.max;
+      return data;
+    }
+  }
+
+  //find size of queue
+  size() {
+    if (this.tail >= this.head)  {
+      qSize = this.tail - this.head;
+    }
+    else  {
+      qSize = this.max - (this.head - this.tail);
+    }
+    //return size of queue
+    return qSize;
+  }
 }
+
+//FUNCTIONS
+function createValue()  {
+  return Math.ceil(Math.random()*40+80);
+};
+
+function createNextValue(bg) {
+  return Math.ceil(jStat.normal.sample(bg,3));
+};
+
+function Start(){
+  console.log("Started");
+  button.removeEventListener("click", Start);
+  button.addEventListener("click", Stop);
+  button.value = "Start";
+};
+
+function Stop(){
+  console.log("Stopped");
+  button.removeEventListener("click", Stop);
+  button.addEventListener("click", Start);
+  button.value = "Stop";
+};
+
+function createData() {
+  let count = 0;
+  rear = (rear + 1) % max;
+  front = (front + 1) % max;
+  while (button.value == "Start") {
+    bgData[0] = new BG(0,createValue(),"stable");
+    bgdata[1] = new BG(1,createNextValue(bg1.value),"stable");
+    if (i % 50 == 0){
+      let bg = new BG(i+1,createNextValue(bgData[i-1].value),"stable");
+      //wait a sec
+    }
+    else {
+      bgData = bgData.shift();
+      i = 0;
+      //send a message to rebind data to d3
+      //wait a sec
+    }
+  }}
+
+
+
 
 // //HIDDEN MARKOV MODEL
 //https://github.com/cnatale/JSProbability/blob/master/ObservableMarkovModel.js
@@ -84,7 +169,7 @@ const svg = d3.select("div#container").append("svg")
 //SCALES
 const xScale = d3.scaleLinear().range([0,width]);
 const yScale = d3.scaleLinear().rangeRound([height, 0]);
-xScale.domain([1,50]);
+xScale.domain([0,50]);
 yScale.domain([40,400]);
 
 //AXES
