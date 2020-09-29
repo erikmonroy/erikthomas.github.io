@@ -4,10 +4,7 @@
 //probability matrix of model
 
 //GLOBAL VARIABLES
-//Start button
-let button = document.getElementById("Start");
-button.addEventListener('click', Start, false);
-//circular queue
+// Data array
 let bgData = [];
 
 //CONSTRUCTORS
@@ -17,67 +14,7 @@ function BG(index, value, state) {
   this.state = state;
 };
 
-//Circular Queue
-class Queue  {
-  maxSize;
-  currentIndex;
-  q;
-  constructor(max)  {
-    this.maxSize = max;
-    this.currentIndex = 0;
-    this.q = [maxSize];
-  }
-
-  //add element to queue
-  enqueue(data) {
-    //is queue full?
-    if (this.length == (this.max - 1))  {
-      return ("Queue is full!");
-    }
-    else  {
-      //add element to queue
-      this.queue.pop(data);
-      //increment tail pointer
-      this.tail = (this.tail + 1) % this.max;
-      return true;
-    }
-  }
-
-  //rm element from queue
-  dequeue() {
-    if (this.length == 0) {
-      return("Queue is empty!");
-    }
-    else  {
-      //fetch data
-      data = this.queue[this.head];
-      // increment head
-      this.head = (this.head + 1) % this.max;
-      return data;
-    }
-  }
-
-  //find size of queue
-  size() {
-    if (this.tail >= this.head)  {
-      qSize = this.tail - this.head;
-    }
-    else  {
-      qSize = this.max - (this.head - this.tail);
-    }
-    //return size of queue
-    return qSize;
-  }
-}
-
 //FUNCTIONS
-function createValue()  {
-  return Math.ceil(Math.random()*40+80);
-};
-
-function createNextValue(bg) {
-  return Math.ceil(jStat.normal.sample(bg,3));
-};
 
 function Start(){
   console.log("Started");
@@ -93,26 +30,26 @@ function Stop(){
   button.value = "Stop";
 };
 
-function createData() {
-  let count = 0;
-  rear = (rear + 1) % max;
-  front = (front + 1) % max;
-  while (button.value == "Start") {
-    bgData[0] = new BG(0,createValue(),"stable");
-    bgdata[1] = new BG(1,createNextValue(bg1.value),"stable");
-    if (i % 50 == 0){
-      let bg = new BG(i+1,createNextValue(bgData[i-1].value),"stable");
-      //wait a sec
-    }
-    else {
-      bgData = bgData.shift();
-      i = 0;
-      //send a message to rebind data to d3
-      //wait a sec
-    }
-  }}
+function createValue()  {
+  return Math.ceil(Math.random()*40+80);
+};
 
+function createNextValue(bg) {
+  return Math.ceil(jStat.normal.sample(bg,3));
+};
 
+// bg data
+bgData[0] = new BG(1,createValue(),"stable");
+bgData[1] = new BG(2,createNextValue(bgData[0].value),"stable");
+for (var i = 2; i < 50; i++)  {
+  bgData.push(new BG(i+1, createNextValue(bgData[i-1].value, "stable")));
+}
+
+function createNewest() {
+  bgData.push(new BG(50,createNextValue(bgData[50].value),"stable"));
+  shift(bgData[0]);
+  console.log(bgData);
+}
 
 
 // //HIDDEN MARKOV MODEL
@@ -160,8 +97,8 @@ const svg = d3.select("div#container").append("svg")
     .attr("viewBox", "-"
           + adj + " -"
           + adj + " "
-          + (width + adj *3) + " "
-          + (height + adj*3))
+          + (width + adj * 3) + " "
+          + (height + adj * 3))
     .style("padding", padding)
     .style("margin", margin)
     .classed("svg-content", true);
@@ -199,21 +136,44 @@ svg.append("g")
     .text("Blood Glucose");
 
 //LINES
-svg.append("path").datum(bgData)
-.attr("fill", "none")
-.attr("stroke", "black")
-.attr("stroke-linejoin", "round")
-.attr("stroke-linecap", "round")
-.attr("stroke-width", 1.5)
-.attr("d", line);
+// svg.append("path").datum(bgData)
+// .attr("fill", "none")
+// .attr("stroke", "black")
+// .attr("stroke-linejoin", "round")
+// .attr("stroke-linecap", "round")
+// .attr("stroke-width", 1.5)
+// .attr("d", line);
 
 //DOTS
 svg.append("g")
     .selectAll('dot')
     .data(bgData)
-    .enter()
-    .append("circle")
-      .attr("cx", function (d)  {return xScale(d.index)})
-      .attr("cy", function (d)  {return yScale(d.value)})
-      .attr("r", 1.5)
+    .enter().append("circle")
+      .attr("r", 3.0)
       .style("fill", "black")
+    .merge(svg)
+      .attr("cx", function (d)  {return xScale(d.index)})
+      .attr("cy", function (d)  {return yScale(d.value)});
+
+// UPDATE DATA
+function updateBG() {
+  //change data
+  createNewest();
+  // Grab data
+  d3.append("g")
+    .selectAll('dot')
+    .data(bgData)
+    .enter().append("circle")
+      .attr("r", 3.0)
+      .style("fill", "black");
+
+  // Selection we want chanes applied to
+  var svg = d3.select("body").transition();
+  // Make changes
+  svg.append("g")
+    .selectAll('dot') // change the dots
+    .duration(1000)
+    .merge(svg)
+      .attr("cx", function (d)  {return xScale(d.index)})
+      .attr("cy", function (d)  {return yScale(d.value)});
+}

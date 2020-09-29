@@ -29,7 +29,12 @@
 </head>
 <body>
   <div id="container" class="svg-container"></div>
-  <button type = "button" id = "Start" class = "button" value = "Stop">Start</button>
+  <div id="option">
+    <input name="updateButton"
+           type="button"
+           value="Update"
+           onclick="updateBG()" />
+  </div>
   <!-- Scripts -->
   <script src="https://d3js.org/d3.v5.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
