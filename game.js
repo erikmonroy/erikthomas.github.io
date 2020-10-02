@@ -39,14 +39,14 @@ function createNextValue(bg) {
 };
 
 // bg data
-bgData[0] = new BG(1,createValue(),"stable");
-bgData[1] = new BG(2,createNextValue(bgData[0].value),"stable");
-for (var i = 2; i < 50; i++)  {
-  bgData.push(new BG(i+1, createNextValue(bgData[i-1].value, "stable")));
+bgData[0] = new BG(0,createValue(),"stable");
+bgData[1] = new BG(1,createNextValue(bgData[0].value),"stable");
+for (var i = 2; i < 51; i++)  {
+  bgData.push(new BG(i, createNextValue(bgData[i-1].value, "stable")));
 }
 
 function createNewest() {
-  bgData.push(new BG(50,createNextValue(bgData[50].value),"stable"));
+  bgData.push(new BG(51,createNextValue(bgData[51].value),"stable"));
   shift(bgData[0]);
   console.log(bgData);
 }
@@ -109,9 +109,15 @@ const yScale = d3.scaleLinear().rangeRound([height, 0]);
 xScale.domain([0,50]);
 yScale.domain([40,400]);
 
-//AXES
-const yaxis = d3.axisLeft().scale(yScale); 
-const xaxis = d3.axisBottom().scale(xScale);
+
+//AXES generators
+const yAxisGen = d3.axisRight().scale(yScale).ticks(5);
+const yAxis2Gen = d3.axisLeft().scale(yScale).ticks(2);
+const xAxisGen = d3.axisBottom().scale(xScale);
+yAxisTicks = [40,100,200,300,400]; //Dexcom intervals
+yAxisTicks2 = [400,250,70]; //Rectangle 
+yAxisGen.tickValues(yAxisTicks).tickSize(10);
+yAxis2Gen.tickValues(yAxisTicks2).tickSize(-width);
 
 //LINES
 const line = d3.line()
@@ -119,21 +125,55 @@ const line = d3.line()
     .y(function(d) { return yScale(d.value); });
 
 //2. DRAW
-//AXES
-svg.append("g")
-    .attr("class", "axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xaxis);
+// BACKGROUND
+let myColor = d3.scaleOrdinal()
+    .domain(yAxisTicks2)
+    .range(["#ffff99","#ccccff","#ff6666"]);
 
 svg.append("g")
+    .selectAll('rect.background')
+    .data(yAxisTicks2)
+    .enter()
+    .append("rect")
+      .attr("width",width)
+      .attr("height", function (d)  {return height - yScale(d) })
+      .attr("x",0)
+      .attr("y", function (d)  {return yScale(d) })
+      .attr("fill", function(d){return myColor(d) });
+
+//AXES
+let xAxis = svg.append("g")
     .attr("class", "axis")
-    .call(yaxis)
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxisGen);
+
+let yAxis = svg.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + width + ", 0)", "rotate(-90)")
+    .call(yAxisGen)
     .append("text")
-    .attr("transform", "rotate(-90)")
     .attr("dy", ".75em")
     .attr("y", 6)
     .style("text-anchor", "end")
-    .text("Blood Glucose");
+    .text("Blood Glucose ");
+
+let yAxis2 = svg.append("g")
+    .attr("class", "axis")
+    .call(yAxis2Gen)
+    // .styles({
+    //   fill: "white",
+    //   stroke: "white"
+    // });
+    // .append("text")
+    // .attr("dy", ".75em")
+    // .attr("y", 6)
+    // .style("text-anchor", "end")
+    // .text("Blood Glucose");
+
+//AXES customization
+
+yAxis.selectAll(".tick text")
+      .attr("font-size","20");
 
 //LINES
 // svg.append("path").datum(bgData)
@@ -143,6 +183,7 @@ svg.append("g")
 // .attr("stroke-linecap", "round")
 // .attr("stroke-width", 1.5)
 // .attr("d", line);
+
 
 //DOTS
 svg.append("g")
