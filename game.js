@@ -5,7 +5,10 @@
 
 //GLOBAL VARIABLES
 // Data array
-let bgData = [];
+let dataAmount = 300;
+const subAmount = 50
+let bgData = [dataAmount];
+let bgSubData = [50];
 
 //CONSTRUCTORS
 function BG(index, value, state) {
@@ -41,18 +44,20 @@ function createNextValue(bg) {
 // bg data
 bgData[0] = new BG(0,createValue(),"stable");
 bgData[1] = new BG(1,createNextValue(bgData[0].value),"stable");
-for (var i = 2; i < 51; i++)  {
-  bgData.push(new BG(i, createNextValue(bgData[i-1].value, "stable")));
+for (var i = 2; i < dataAmount; i++)  {
+  bgData.push(new BG(i, createNextValue(bgData[i-1].value), "stable"));
 }
 
-function createNewest() {
-  bgData.push(new BG(51,createNextValue(bgData[51].value),"stable"));
-  shift(bgData[0]);
-  console.log(bgData);
-}
+// Need continuously updating subarray
+bgSubData = bgData.slice(0, subAmount);
+// On click (for now) will update once
+function updateSubData() {
+  bgSubData.shift(bgData[0])
+  bgSubData.push(bgData[subAmount]);
+};
 
 
-// //HIDDEN MARKOV MODEL
+// //HIDDEN MARKOV MODEL or BG MODEL
 //https://github.com/cnatale/JSProbability/blob/master/ObservableMarkovModel.js
 // let omm = ProbabilityAPI.ObservableMarkovModel;
 
@@ -81,6 +86,8 @@ function createNewest() {
 // for(let i=0; i < probabilities.length; i++){
 //    result += probabilities[i];
 // }
+
+
 
 
 //d3 viz
@@ -159,7 +166,7 @@ let yAxis = svg.append("g")
 
 let yAxis2 = svg.append("g")
     .attr("class", "axis")
-    .call(yAxis2Gen)
+    .call(yAxis2Gen);
     // .styles({
     //   fill: "white",
     //   stroke: "white"
@@ -188,7 +195,7 @@ yAxis.selectAll(".tick text")
 //DOTS
 svg.append("g")
     .selectAll('dot')
-    .data(bgData)
+    .data(bgSubData)
     .enter().append("circle")
       .attr("r", 3.0)
       .style("fill", "black")
@@ -197,24 +204,16 @@ svg.append("g")
       .attr("cy", function (d)  {return yScale(d.value)});
 
 // UPDATE DATA
-function updateBG() {
-  //change data
-  createNewest();
-  // Grab data
-  d3.append("g")
-    .selectAll('dot')
-    .data(bgData)
-    .enter().append("circle")
-      .attr("r", 3.0)
-      .style("fill", "black");
+svg.append("g")
+    .update();
 
-  // Selection we want chanes applied to
-  var svg = d3.select("body").transition();
-  // Make changes
-  svg.append("g")
-    .selectAll('dot') // change the dots
-    .duration(1000)
-    .merge(svg)
-      .attr("cx", function (d)  {return xScale(d.index)})
-      .attr("cy", function (d)  {return yScale(d.value)});
-}
+  // Selection we want changes applied to
+//   var svg = d3.select("body").transition();
+//   // Make changes
+//   svg.append("g")
+//     .selectAll('dot') // change the dots
+//     .duration(1000)
+//     .merge(svg)
+//       .attr("cx", function (d)  {return xScale(d.index)})
+//       .attr("cy", function (d)  {return yScale(d.value)});
+// }
