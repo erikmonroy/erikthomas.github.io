@@ -165,12 +165,8 @@ let yAxis = svg.append("g")
     .text("Blood Glucose ");
 
 let yAxis2 = svg.append("g")
-    .attr("class", "axis")
-    .call(yAxis2Gen);
-    // .styles({
-    //   fill: "white",
-    //   stroke: "white"
-    // });
+     .attr("class", "ytlines")
+     .call(yAxis2Gen);
     // .append("text")
     // .attr("dy", ".75em")
     // .attr("y", 6)
@@ -203,41 +199,39 @@ svg.append("g")
       .attr("cx", function (d)  {return xScale(d.index)})
       .attr("cy", function (d)  {return yScale(d.value)});
 
+// UPDATE DATA
+
 // Need update count
 var count = 0;
-// UPDATE DATA
+// Error catch
+// if (count >= dataAmount - subAmount)  {
+//   return 1;
+// }
+
+// D3 update
 function updateData() {
-  // Remove old elements
-  d3.selectAll("circle")
-      .remove();
-  // Update data
-  bgSubData.shift(bgData[0]);
-  bgSubData.push(bgData[subAmount + count]);
-  count += 1;
-  // Scale the range of data again
-  xScale.domain([0,50]);
-  yScale.domain([40,400]);
-  // Section we want changes to apply to
-  svg.select("div#container").transition();
-  // Make changes
-  svg.append("g")
-  .selectAll('dot')
-  .data(bgSubData)
-  .enter().append("circle")
+  setInterval(function() {
+    // Remove old elements
+    d3.selectAll("circle")
+    .remove();
+    // Update data
+    bgSubData.shift(bgData[0]);
+    bgSubData.push(bgData[subAmount + count]);
+    count += 1;
+    // Scale the range of data again
+    xScale.domain([0,50]);
+    yScale.domain([40,400]);
+    // Section we want changes to apply to
+    svg.select("div#container").transition();
+    // Make changes
+    svg.append("g")
+    .selectAll('dot')
+    .data(bgSubData)
+    .enter().append("circle")
     .attr("r", 3.0)
     .style("fill", "black")
-  .merge(svg)
+    .merge(svg)
     .attr("cx", function (d)  {return xScale(d.index - count)})
     .attr("cy", function (d)  {return yScale(d.value)});
-}
-
-  // Selection we want changes applied to
-//   var svg = d3.select("body").transition();
-//   // Make changes
-//   svg.append("g")
-//     .selectAll('dot') // change the dots
-//     .duration(1000)
-//     .merge(svg)
-//       .attr("cx", function (d)  {return xScale(d.index)})
-//       .attr("cy", function (d)  {return yScale(d.value)});
-// }
+  }, 1000);
+};
