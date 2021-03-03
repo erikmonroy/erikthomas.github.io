@@ -8,7 +8,7 @@
 let dataAmount = 300;
 const subAmount = 50
 let bgData = [dataAmount];
-let bgSubData = [50];
+let bgSubData = [subAmount];
 
 //CONSTRUCTORS
 function BG(index, value, state) {
@@ -33,6 +33,7 @@ function BG(index, value, state) {
 //   button.value = "Stop";
 // };
 
+// BG random
 function createValue()  {
   return Math.ceil(Math.random()*40+80);
 };
@@ -40,6 +41,16 @@ function createValue()  {
 function createNextValue(bg) {
   return Math.ceil(jStat.normal.sample(bg,3));
 };
+
+// Carb models
+function carb() {
+
+}
+
+// Insulin model
+function insulin()  {
+  
+}
 
 // bg data
 bgData[0] = new BG(0,createValue(),"stable");
@@ -55,39 +66,6 @@ bgSubData = bgData.slice(0, subAmount);
 //   bgSubData.shift(bgData[0])
 //   bgSubData.push(bgData[subAmount]);
 // };
-
-
-// //HIDDEN MARKOV MODEL or BG MODEL
-//https://github.com/cnatale/JSProbability/blob/master/ObservableMarkovModel.js
-// let omm = ProbabilityAPI.ObservableMarkovModel;
-
-// let probabilityTable = [
-//     [.8, .15, .05],
-//     [.1, .8, .1],
-//     [.1, .8, .1]
-// ];
-
-// //fake an enum for readability
-// let states = {
-//     stable:0,
-//     rising:1,
-//     falling:2
-// };
-
-// let result=0;
-// let probabilities = [];
-// probabilities[0] = omm.getProbability([states.rising, states.falling, states.falling], probabilityTable);
-
-// probabilities[1] =  omm.getProbability([states.rising, states.stable, states.falling], probabilityTable);
-
-
-// probabilities[2] =  omm.getProbability([states.rising, states.rising, states.falling], probabilityTable);
-
-// for(let i=0; i < probabilities.length; i++){
-//    result += probabilities[i];
-// }
-
-
 
 
 //d3 viz
@@ -116,7 +94,6 @@ const yScale = d3.scaleLinear().rangeRound([height, 0]);
 xScale.domain([0,50]);
 yScale.domain([40,400]);
 
-
 //AXES generators
 const yAxisGen = d3.axisRight().scale(yScale).ticks(5);
 const yAxis2Gen = d3.axisLeft().scale(yScale).ticks(2);
@@ -130,6 +107,7 @@ yAxis2Gen.tickValues(yAxisTicks2).tickSize(-width);
 const line = d3.line()
     .x(function(d) { return xScale(d.index); })
     .y(function(d) { return yScale(d.value); });
+
 
 //2. DRAW
 // BACKGROUND
@@ -178,26 +156,21 @@ let yAxis2 = svg.append("g")
 yAxis.selectAll(".tick text")
       .attr("font-size","20");
 
-//LINES
-// svg.append("path").datum(bgData)
-// .attr("fill", "none")
-// .attr("stroke", "black")
-// .attr("stroke-linejoin", "round")
-// .attr("stroke-linecap", "round")
-// .attr("stroke-width", 1.5)
-// .attr("d", line);
-
-
 //DOTS
 svg.append("g")
     .selectAll('dot')
-    .data(bgSubData)
+    .data(bgSubData.slice(0,49))
     .enter().append("circle")
       .attr("r", 3.0)
-      .style("fill", "black")
+      .style("fill", "white")
+    .data(bgSubData[49])
+    .enter().append("circle")
+      .attr("r", 4.0)
+      .style("fill", "white")
     .merge(svg)
       .attr("cx", function (d)  {return xScale(d.index)})
       .attr("cy", function (d)  {return yScale(d.value)});
+
 
 // UPDATE DATA
 
@@ -229,7 +202,7 @@ function updateData() {
     .data(bgSubData)
     .enter().append("circle")
     .attr("r", 3.0)
-    .style("fill", "black")
+    .style("fill", "white")
     .merge(svg)
     .attr("cx", function (d)  {return xScale(d.index - count)})
     .attr("cy", function (d)  {return yScale(d.value)});

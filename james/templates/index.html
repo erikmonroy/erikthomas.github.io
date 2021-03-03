@@ -5,5 +5,27 @@
 {% endblock %}
 
 {% block main %}
-    <h1 class="display-4">Hola, Guanaco!</h1>
+    <div id="container" class="svg-container"></div>
+    <div id="carbs">
+        <input name="Carbs"
+                type="button"
+                value="Carbs"
+                onclick="carb(); return false;" />
+    </div>
+    <div id="insulin">
+        <input name="Insulin"
+                type="button"
+                value="Insulin"
+                onclick="insulin(); return false;" />
+    </div>
+    <div id="start">
+        <input name="Start"
+                type="button"
+                value="Start"
+                onclick="updateData(); return false;" />
+    </div>
+    <!-- Scripts -->
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
+    <script src="static/game.js"></script>
 {% endblock %}
