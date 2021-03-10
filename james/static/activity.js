@@ -15,16 +15,16 @@
 //     NOTE: Parameters above assume body weight of 70 kg (~154 lbs) 
 // '''
 
-let tau1 = 55 
-let tau2 = 70 
-let Kcl = 1
-let U0 = 1
+let tau1 = 55;
+let tau2 = 70;
+let Kcl = 1;
+let U0 = 1;
 let t = [];
-for (var i = 1; i <= 8*60; i++) { // in minutes
+for (var i = 0; i <= 8*60; i++) { // in minutes
    t.push(i);
 }
 
-let I = U0 * (1 / (Kcl * (tau2 - tau1))) * (Math.E(-t/tau2) - Math.E(-t/tau1))
+let I = U0 * (1 / (Kcl * (tau2 - tau1))) * (Math.E(-t/tau2) - Math.E(-t/tau1));
 
 // Plot
 // fig = px.line(
@@ -40,7 +40,7 @@ let I = U0 * (1 / (Kcl * (tau2 - tau1))) * (Math.E(-t/tau2) - Math.E(-t/tau1))
 // ''' the amount of insulin absorbed over the insulin duration
 // '''
 
-let ia = I.map(d => y+= d)
+let ia = I.map(d => y+= d);
 
 // Plot
 // fig = px.line(
@@ -56,7 +56,7 @@ let ia = I.map(d => y+= d)
 // minus the total amount absorbed over the insulin duration
 // '''
 
-let iob = ia.map(d => U0 - d)
+let iob = ia.map(d => U0 - d);
 // Plot
 // fig = px.line(
 //     title="Insulin On Board",
@@ -71,8 +71,9 @@ let iob = ia.map(d => U0 - d)
 // total amount of insulin absorbed times the insulin sensitivity  
 // '''
 
-let ISF = 50  // insulin sensitivity factor (ISF) mg/dL/U
-let insulin_effect = ia.map(d => -ISF * d)
+let ISF = 50;  // insulin sensitivity factor (ISF) mg/dL/U
+let insulin_effect = ia.map(d => -ISF * d);
+console.print(insulin_effect);
 
 // Plot
 // fig = px.line(
@@ -89,6 +90,14 @@ let insulin_effect = ia.map(d => -ISF * d)
 // of the cumulative insulin effect
 // '''
 
-t_5min = np.arange(0, 8*60, 5)
-ie_5min = insulin_effect[t_5min]
-expected_drop = np.append(0, ie_5min[1:] - ie_5min[:-1])
+let t_5min = [];
+for (var i = 0; i <= 8*60; i+=5) {
+   t_5min.push(i);
+}
+// Below array may not work
+ie_5min = insulin_effect[t_5min];
+
+// expected_drop = np.append(0, ie_5min[1:] - ie_5min[:-1])
+// Plot
+// fig = px.scatter(x=t_5min, y=expected_drop, labels={"x":"Time (min)", "y":"Change in BG (mg/dL)"}, title="Expected Drop in BG Every 5 Minutes")
+// fig.show()
