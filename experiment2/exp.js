@@ -2,20 +2,39 @@ document.querySelector("#circle").style.width = "100px";
 document.querySelector("#circle").style.height = "100px";
 
 document.querySelector("#carb").addEventListener('click', function() {
-    carb_load += 15;
+    carb_load += 1;
+	last_carb = t;
 })
 
 document.querySelector("#insulin").addEventListener('click', function() {
     insulin += 1;
+	last_dose = t;
 })
+
+// Color code
+var color_scale = ["#ff6666","#ccccff","#ffff99", "#000000"];
+function getColor(bg) {
+	if (bg < 70){
+		return color_scale[0];
+	}
+	else if (bg < 200) {
+		return color_scale[1];
+	}
+	else {
+		return color_scale[2];
+	}
+}
 
 // Each second represents a minute?
 var t = 0;
 
 var current_bg = 100;
 var carb_load = 0;
+var last_carb = 0;
 var insulin = 0;
+var last_dose = 0;
 
+// Need to decide amount of carbs
 // in BG from 15 carbs
 var expected_increase = [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00,
 	0.00000000e+00, 6.73406849e+00, 5.97827385e+00, 5.30730542e+00,
@@ -42,6 +61,7 @@ var expected_increase = [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000
 	3.44377234e-04, 3.05726236e-04, 2.71413213e-04, 2.40951293e-04,
 	2.13908252e-04, 1.89900371e-04, 1.68587003e-04, 1.49665729e-04];
 
+// Need to decide ISF
 // in BG from 1 unit of insulin
 var expected_drop = [ 0.0, -0.1835875 , -0.45450114, -0.68209674, -0.87150191,
 	-1.02730467, -1.15360686, -1.25407239, -1.33197094, -1.3902174 ,
@@ -64,21 +84,39 @@ var expected_drop = [ 0.0, -0.1835875 , -0.45450114, -0.68209674, -0.87150191,
 	-0.0228625 , -0.02137328, -0.01997918, -0.01867429, -0.01745306,
 	-0.01631028];
 
+// new array
+var bg_array = new Array(96);
+bg_array.fill(100);
+
 setInterval(function() {
-	if (t % 5)	{
-		document.querySelector("#circle").style.width = `${current_bg}px`;
-		document.querySelector("#circle").style.height = `${current_bg}px`;
-		updateModel(t);
-	}
+	circle_color = getColor(current_bg);
+	document.querySelector("#circle").style.width = `${current_bg}px`;
+	document.querySelector("#circle").style.height = `${current_bg}px`;
+	document.querySelector("#circle").style.background = circle_color;
+	updateModel(t);
 	t++;
 }, 1000)
 
 function updateModel(time) {
-	var ftime = time/5
-    current_bg += expected_increase[ftime] - expected_drop[ftime];
-	// Mimic insulin on board
-	if (t > 200) {
-		carb_load -= 15;
-    	insulin -= 1;
+	//
+	var carb_effect = 0;
+	//every 5-10 secs should be random perturbation
+	// if (time % 10 == 0) {
+	// 	current_bg += Math.ceil(jStat.normal.sample(0,5))
+	// }
+
+	// Do calculation based on if theres carbs and last carb
+	if (carb_load > 0) {
+		carb_effect = expected_drop[time - last_carb]
 	}
+
+	// keep taking off first element of array, move 96 steps into future
+
+	// var ftime = time/5
+    // current_bg += expected_increase[ftime] - expected_drop[ftime];
+	// // Mimic insulin on board
+	// if (t > 200) {
+	// 	carb_load -= 15;
+    // 	insulin -= 1;
+	// }
 }
