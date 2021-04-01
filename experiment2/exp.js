@@ -1,5 +1,7 @@
 var t = 0;
 var ir = 0;
+const low_thresh = 80;
+const hi_thresh = 150;
 
 // Need to decide amount of carbs
 // in BG from 15 carbs
@@ -70,6 +72,7 @@ function updateInsulin() {
 
 document.querySelector("#circle").style.width = "100px";
 document.querySelector("#circle").style.height = "100px";
+document.querySelector("#score").innerHTML = `100% in range`;
 
 document.querySelector("#carb").addEventListener('click', updateCarb);
 
@@ -78,10 +81,10 @@ document.querySelector("#insulin").addEventListener('click', updateInsulin);
 // Color code
 var color_scale = ["#ff6666","#ccccff","#ffff99", "#000000"];
 function getColor(bg) {
-	if (bg < 70){
+	if (bg < low_thresh){
 		return color_scale[0];
 	}
-	else if (bg < 200) {
+	else if (bg < hi_thresh) {
 		return color_scale[1];
 	}
 	else {
@@ -91,9 +94,11 @@ function getColor(bg) {
 
 setInterval(function() {
 	circle_color = getColor(current_bg);
+	var tir = Math.round(100 * (ir/t),2);
 	document.querySelector("#circle").style.width = `${current_bg}px`;
 	document.querySelector("#circle").style.height = `${current_bg}px`;
 	document.querySelector("#circle").style.background = circle_color;
+	document.querySelector("#score").innerHTML = `${tir}% in range`;
 	updateModel();
 	updateScore();
 	runEvent();
@@ -110,7 +115,7 @@ function updateModel() {
 }
 
 function updateScore() {
-	if (bg_array[0] > 79 & bg_array[0] < 121) {
+	if (bg_array[0] > low_thresh & bg_array[0] < hi_thresh) {
 		ir ++;
 	}
 }
