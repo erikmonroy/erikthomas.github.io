@@ -1,3 +1,6 @@
+var t = 0;
+var ir = 0;
+
 // Need to decide amount of carbs
 // in BG from 15 carbs
 var expected_increase = [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00,
@@ -92,6 +95,9 @@ setInterval(function() {
 	document.querySelector("#circle").style.height = `${current_bg}px`;
 	document.querySelector("#circle").style.background = circle_color;
 	updateModel();
+	updateScore();
+	runEvent();
+	t++;
 }, 250)
 
 function updateModel() {
@@ -101,4 +107,21 @@ function updateModel() {
 	bg_array.push(Math.round(jStat.normal.sample(bg_array[94],1)))
 	// // Update global BG
 	current_bg = bg_array[0];
+}
+
+function updateScore() {
+	if (bg_array[0] > 79 & bg_array[0] < 121) {
+		ir ++;
+	}
+}
+
+function runEvent()	{
+	// run a prob that an event is run
+	// Donut
+	// updateCarb() * 4
+	// Broken pump
+	// import neg insulin curve?
+	// OD / forgot to eat
+	// updateInsulin() * 6
+	
 }
