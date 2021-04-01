@@ -92,13 +92,13 @@ setInterval(function() {
 	document.querySelector("#circle").style.height = `${current_bg}px`;
 	document.querySelector("#circle").style.background = circle_color;
 	updateModel();
-}, 1000)
+}, 250)
 
 function updateModel() {
 	// Take out 1st element
 	bg_array.shift(bg_array[0])
 	// // Sample next point
-	bg_array.push(Math.ceil(jStat.normal.sample(bg_array[94],1)))
+	bg_array.push(Math.round(jStat.normal.sample(bg_array[94],1)))
 	// // Update global BG
 	current_bg = bg_array[0];
 }

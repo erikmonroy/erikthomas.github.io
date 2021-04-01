@@ -52,6 +52,10 @@ main img
     height: 50px;
     margin: auto;
     transition: width 0.5s, height 0.5s, background-color 0.5s;
+    position:relative;
+    display:inline-block;
+    top: 100%;
+    transform:translateY(-50%);
   }
   
   #container {
