@@ -4,26 +4,48 @@ const low_thresh = 80;
 const hi_thresh = 150;
 
 // Events constructor
-function Event(name, type, intensity, chop, duration) {
-	this.name = name;
-	this.type = type;
-	this.intensity = intensity;
-	this.chop = chop;
-	this.duration = duration;
-	time = t;
-	this.run = function()	{
+// function Event(name, type, intensity, chop, duration) {
+	// this.name = name;
+	// this.type = type;
+	// this.intensity = intensity;
+	// this.chop = chop;
+	// this.duration = duration;
+	// time = t;
+	// this.run = function()	{
+	// 	while ((t - time) < duration){
+	// 		setTimeout(function() {
+	// 			if (type == "lo") {
+	// 				updateInsulin(intensity);
+	// 			}
+	// 			else {
+	// 				updateCarb(intensity);
+	// 			}
+	// 		}, chop);
+	// 	}
+	// };
+// }
+
+class Event {
+	constructor(name, type, intensity, chop, duration) {
+		this.name = name;
+		this.type = type;
+		this.intensity = intensity;
+		this.chop = chop;
+		this.duration = duration;
+		this.time = t;
+	}
+	run()	{
 		while ((t - time) < duration){
-			setInterval(function() {
+			setTimeout(function() {
 				if (type == "lo") {
 					updateInsulin(intensity);
 				}
 				else {
 					updateCarb(intensity);
 				}
-			}, chop)
-			
+			}, chop);
 		}
-	};
+	}
 }
 
 // Need to decide amount of carbs
