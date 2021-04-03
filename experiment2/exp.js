@@ -3,47 +3,28 @@ var ir = 0;
 const low_thresh = 80;
 const hi_thresh = 150;
 
-// Events constructor
-// function Event(name, type, intensity, chop, duration) {
-	// this.name = name;
-	// this.type = type;
-	// this.intensity = intensity;
-	// this.chop = chop;
-	// this.duration = duration;
-	// time = t;
-	// this.run = function()	{
-	// 	while ((t - time) < duration){
-	// 		setTimeout(function() {
-	// 			if (type == "lo") {
-	// 				updateInsulin(intensity);
-	// 			}
-	// 			else {
-	// 				updateCarb(intensity);
-	// 			}
-	// 		}, chop);
-	// 	}
-	// };
-// }
-
 class Event {
-	constructor(name, type, intensity, chop, duration) {
+	constructor(name, type, intensity, amount, duration) {
 		this.name = name;
 		this.type = type;
 		this.intensity = intensity;
-		this.chop = chop;
+		this.amount = amount;
 		this.duration = duration;
-		this.time = t;
 	}
 	run()	{
-		while ((t - time) < duration){
-			setTimeout(function() {
-				if (type == "lo") {
-					updateInsulin(intensity);
-				}
-				else {
-					updateCarb(intensity);
-				}
-			}, chop);
+		if (this.type === "lo") {
+			for (let i = 0; i < this.amount; i++) {
+				setTimeout(function() {
+					updateInsulin(this.intensity)
+				}, this.duration);
+			}
+		}
+		else {
+			for (let i = 0; i < this.amount; i++) {
+				setTimeout(function() {
+					updateCarb(this.intensity)
+				}, this.duration);
+			}
 		}
 	}
 }
@@ -105,18 +86,19 @@ var current_bg = bg_array[0];
 
 function updateCarb(x)	{
 	for (let i = 0; i < 96; i++) {
-		bg_array[i] += expected_increase[i]*x;
+		bg_array[i] += (expected_increase[i]*x);
 	}
 }
 
 function updateInsulin(x) {
 	for (let i = 0; i < 96; i++) {
-		bg_array[i] += expected_drop[i]*x;
+		bg_array[i] += (expected_drop[i]*x);
 	}
 }
 
 document.querySelector("#circle").style.width = "100px";
 document.querySelector("#circle").style.height = "100px";
+// part of experiment could manipulate wording of "in range"
 document.querySelector("#score").innerHTML = `100% in range`;
 
 document.querySelector("#carb").addEventListener('click', function() {updateCarb(1)});
