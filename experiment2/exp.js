@@ -3,6 +3,25 @@ var ir = 0;
 const low_thresh = 80;
 const hi_thresh = 150;
 
+// Events constructor
+function Event(name, type, intensity, duration) {
+	this.name = name;
+	this.type = type;
+	this.intensity = intensity;
+	this.duration = duration;
+	this.run = function()	{
+		if (type == "lo") {
+			
+		}
+		else if (type == "hi") {
+
+		}
+		else {
+			
+		}
+	};
+}
+
 // Need to decide amount of carbs
 // in BG from 15 carbs
 var expected_increase = [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00,
@@ -101,7 +120,8 @@ setInterval(function() {
 	document.querySelector("#score").innerHTML = `${tir}% in range`;
 	updateModel();
 	updateScore();
-	runEvent();
+	// runEvent();
+	// add probability function for events
 	t++;
 }, 250)
 
@@ -118,15 +138,4 @@ function updateScore() {
 	if (bg_array[0] > low_thresh & bg_array[0] < hi_thresh) {
 		ir ++;
 	}
-}
-
-function runEvent()	{
-	// run a prob that an event is run
-	// Donut
-	// updateCarb() * 4
-	// Broken pump
-	// import neg insulin curve?
-	// OD / forgot to eat
-	// updateInsulin() * 6
-	
 }
