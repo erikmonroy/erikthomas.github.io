@@ -4,19 +4,23 @@ const low_thresh = 80;
 const hi_thresh = 150;
 
 // Events constructor
-function Event(name, type, intensity, duration) {
+function Event(name, type, intensity, chop, duration) {
 	this.name = name;
 	this.type = type;
 	this.intensity = intensity;
+	this.chop = chop;
 	this.duration = duration;
+	time = t;
 	this.run = function()	{
-		if (type == "lo") {
-			
-		}
-		else if (type == "hi") {
-
-		}
-		else {
+		while ((t - time) < duration){
+			setInterval(function() {
+				if (type == "lo") {
+					updateInsulin(intensity);
+				}
+				else {
+					updateCarb(intensity);
+				}
+			}, chop)
 			
 		}
 	};
@@ -77,15 +81,15 @@ var bg_array = new Array(96);
 bg_array.fill(100);
 var current_bg = bg_array[0];
 
-function updateCarb()	{
+function updateCarb(x)	{
 	for (let i = 0; i < 96; i++) {
-		bg_array[i] += expected_increase[i];
+		bg_array[i] += expected_increase[i]*x;
 	}
 }
 
-function updateInsulin() {
+function updateInsulin(x) {
 	for (let i = 0; i < 96; i++) {
-		bg_array[i] += expected_drop[i];
+		bg_array[i] += expected_drop[i]*x;
 	}
 }
 
@@ -93,9 +97,9 @@ document.querySelector("#circle").style.width = "100px";
 document.querySelector("#circle").style.height = "100px";
 document.querySelector("#score").innerHTML = `100% in range`;
 
-document.querySelector("#carb").addEventListener('click', updateCarb);
+document.querySelector("#carb").addEventListener('click', function() {updateCarb(1)});
 
-document.querySelector("#insulin").addEventListener('click', updateInsulin);
+document.querySelector("#insulin").addEventListener('click', function() {updateInsulin(1)});
 
 // Color code
 var color_scale = ["#ff6666","#ccccff","#ffff99", "#000000"];
