@@ -3,29 +3,48 @@ var ir = 0;
 const low_thresh = 80;
 const hi_thresh = 150;
 
+// new array
+var bg_array = new Array(96);
+bg_array.fill(100);
+var current_bg = bg_array[0];
+
+function updateCarb(x)	{
+	for (let i = 0; i < 96; i++) {
+		bg_array[i] += (expected_increase[i]*x);
+	}
+}
+
+function updateInsulin(x) {
+	for (let i = 0; i < 96; i++) {
+		bg_array[i] += (expected_drop[i]*x);
+	}
+}
+
+function runEvent(type, amount, intensity, duration)	{
+	if (type == 0) {
+		for (let i = 0; i < amount; i++) {
+			setTimeout(function() {
+				updateInsulin(intensity)
+			}, duration);
+		}
+	}
+	else {
+		for (let i = 0; i < amount; i++) {
+			setTimeout(function() {
+				updateCarb(intensity)
+			}, duration);
+		}
+	}
+}
+
+
+
 class Event {
-	constructor(name, type, intensity, amount, duration) {
-		this.name = name;
+	constructor(type, intensity, amount, duration) {
 		this.type = type;
 		this.intensity = intensity;
 		this.amount = amount;
 		this.duration = duration;
-	}
-	run()	{
-		if (this.type === "lo") {
-			for (let i = 0; i < this.amount; i++) {
-				setTimeout(function() {
-					updateInsulin(this.intensity)
-				}, this.duration);
-			}
-		}
-		else {
-			for (let i = 0; i < this.amount; i++) {
-				setTimeout(function() {
-					updateCarb(this.intensity)
-				}, this.duration);
-			}
-		}
 	}
 }
 
@@ -78,23 +97,6 @@ var expected_drop = [ 0.0, -0.1835875 , -0.45450114, -0.68209674, -0.87150191,
 	-0.03196892, -0.02990192, -0.02796551, -0.02615175, -0.0244531 ,
 	-0.0228625 , -0.02137328, -0.01997918, -0.01867429, -0.01745306,
 	-0.01631028];
-
-// new array
-var bg_array = new Array(96);
-bg_array.fill(100);
-var current_bg = bg_array[0];
-
-function updateCarb(x)	{
-	for (let i = 0; i < 96; i++) {
-		bg_array[i] += (expected_increase[i]*x);
-	}
-}
-
-function updateInsulin(x) {
-	for (let i = 0; i < 96; i++) {
-		bg_array[i] += (expected_drop[i]*x);
-	}
-}
 
 document.querySelector("#circle").style.width = "100px";
 document.querySelector("#circle").style.height = "100px";
