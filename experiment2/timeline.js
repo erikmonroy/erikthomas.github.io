@@ -14,12 +14,13 @@ var instructions = {
         `If the circle grows out of range, use the shrink button to decrease it: <img src="dot_hi.jpg"`,
         `Following the trial, you will answer some questions about your experience. Good luck!`
     ],
-    show_clickable_nav: true
+    show_clickable_nav: true,
+    on_finish: 
 }
-
 timeline.push(instructions);
 
 /* start the experiment */
 jsPsych.init({
     timeline: timeline
 });
+

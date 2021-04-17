@@ -1,5 +1,6 @@
 var t = 0;
 var ir = 0;
+var factor = 10;
 const low_thresh = 80;
 const hi_thresh = 150;
 
@@ -103,9 +104,9 @@ document.querySelector("#circle").style.height = "100px";
 // part of experiment could manipulate wording of "in range"
 document.querySelector("#score").innerHTML = `100% in range`;
 
-document.querySelector("#carb").addEventListener('click', function() {updateCarb(1)});
+document.querySelector("#carb").addEventListener('click', function() {updateCarb(10)});
 
-document.querySelector("#insulin").addEventListener('click', function() {updateInsulin(1)});
+document.querySelector("#insulin").addEventListener('click', function() {updateInsulin(10)});
 
 // Color code
 var color_scale = ["#ff6666","#ccccff","#ffff99", "#000000"];
@@ -121,19 +122,27 @@ function getColor(bg) {
 	}
 }
 
-setInterval(function() {
+var game;
+
+function startGame() {
+	game = setInterval(function() {
+		updateGraphics();
+		updateModel();
+		updateScore();
+		// runEvent();
+		// add probability function for events
+		t++;
+	}, 250);
+}
+
+function updateGraphics() {
 	circle_color = getColor(current_bg);
 	var tir = Math.round(100 * (ir/t),2);
 	document.querySelector("#circle").style.width = `${current_bg}px`;
 	document.querySelector("#circle").style.height = `${current_bg}px`;
 	document.querySelector("#circle").style.background = circle_color;
 	document.querySelector("#score").innerHTML = `${tir}% in range`;
-	updateModel();
-	updateScore();
-	// runEvent();
-	// add probability function for events
-	t++;
-}, 250)
+}
 
 function updateModel() {
 	// Take out 1st element
