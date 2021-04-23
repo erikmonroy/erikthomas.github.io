@@ -14,8 +14,8 @@ jsPsych.plugins["control-game"] = (function() {
         default: 37 // <-
       },
       increase_key: {
-        type: jsPsych.plugins.parameterType.KEYCODE, // BOOL, STRING, INT, FLOAT, FUNCTION, KEY, SELECT, HTML_STRING, IMAGE, AUDIO, VIDEO, OBJECT, COMPLEX
-        default: 39 // <-
+        type: jsPsych.plugins.parameterType.KEYCODE,
+        default: 39 // ->
       },
       insulin_curve: {
         type: jsPsych.plugins.parameterType.FLOAT,
@@ -70,7 +70,7 @@ jsPsych.plugins["control-game"] = (function() {
       events: {
         type: jsPsych.plugins.parameterType.OBJECT,
         // Event architecture {type: 'lo/hi',factor: #,stretch:#}
-        default: [{type:'lo',factor:5,stretch:1},{type:'hi',factor:5,stretch:5}]
+        default: [{type:'lo',factor:5,stretch:1},{type:'hi',factor:5,stretch:10}]
       }
     }
   }
@@ -88,7 +88,8 @@ jsPsych.plugins["control-game"] = (function() {
 
     // data saving
     var trial_data = {
-      timeInRange: ir/t
+      timeInRange: ir/t,
+      keys: 'implement'
     };
     var rt = [];
     
@@ -133,7 +134,7 @@ jsPsych.plugins["control-game"] = (function() {
     
     function updateScore() {
       if (bg_array[0] > low_thresh & bg_array[0] < hi_thresh) {
-        ir ++;
+        ir += 0.25;
       }
     }
 
@@ -153,12 +154,12 @@ jsPsych.plugins["control-game"] = (function() {
     function runEvent(i) {
       if (trial.events[i].type == 'lo') {
         for (let j = 0; j < trial.events[i].stretch; j++) {
-          setTimeout(updateInsulin(trial.events[i].factor, trial.events[i].stretch*1000));
+          setTimeout(updateInsulin(trial.events[i].factor/trial.events[i].stretch, trial.events[i].stretch*1000));
         }
       }
       else if (trial.events[i].type == 'hi') {
         for (let j = 0; j < trial.events[i].stretch; j++) {
-          setTimeout(updateCarb(trial.events[i].factor, trial.events[i].stretch*1000));
+          setTimeout(updateCarb(trial.events[i].factor/trial.events[i].stretch, trial.events[i].stretch*1000));
         }
       }
     }
@@ -167,13 +168,6 @@ jsPsych.plugins["control-game"] = (function() {
       updateGraphics();
       updateModel();
       updateScore();
-      
-      // use trial.events.length and t to determine when to runEvent
-      for (let i = 0; i < trial.events.length; i++) {
-        runEvent(i);
-      }
-      //runEvent();
-      // add probability function for events
     }
 
     var game;
@@ -198,9 +192,15 @@ jsPsych.plugins["control-game"] = (function() {
         allow_held_key: false
       });
 
+      // use trial.events.length and t to determine when to runEvent
+      var period_length = (trial_time / trial.events.length)/1000;
+      // for (let i = 0; i < trial.events.length; i++) {
+      //   runEvent(i);
+      // }
+
       game = setInterval(function() {
         create_control_game();
-        t++;
+        t += 0.25;
       }, 250);
     }
 
@@ -220,7 +220,6 @@ jsPsych.plugins["control-game"] = (function() {
 
     function end_trial(){
       trial_data.rt = JSON.stringify(rt);
-
       clearInterval(game);
 
       // end trial
