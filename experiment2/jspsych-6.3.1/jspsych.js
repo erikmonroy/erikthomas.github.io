@@ -2309,11 +2309,12 @@ jsPsych.pluginAPI = (function() {
           valid_response = true;
         }
         if(!case_sensitive) {
-          var valid_lower = parameters.valid_responses.map(function(v) {return v.toLowerCase();});
-          var key_lower = e.key.toLowerCase();
-          if (valid_lower.includes(key_lower)) {
+          //var valid_lower = parameters.valid_responses.map(function(v) {return v.toLowerCase();} );
+          //var valid_lower = parameters.valid_responses.toLowerCase();
+          // var key_lower = e.key.toLowerCase();
+          // if (valid_lower.includes(key_lower)) {
             valid_response = true;
-          }
+          // }
         }
       }
       
