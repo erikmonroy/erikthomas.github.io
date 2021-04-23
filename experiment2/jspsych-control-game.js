@@ -68,24 +68,10 @@ jsPsych.plugins["control-game"] = (function() {
           2.13908252e-04, 1.89900371e-04, 1.68587003e-04, 1.49665729e-04]
       },
       events: {
-        type: jsPsych.plugins.parameterType.STRING,
-        default: null
+        type: jsPsych.plugins.parameterType.OBJECT,
+        // Event architecture {type: 'lo/hi',factor: #,stretch:#}
+        default: [{type:'lo',factor:5,stretch:1},{type:'hi',factor:5,stretch:5}]
       }
-      //parameter for insulina nd carb curves
-      //default can be curves based on tidepool data
-      // version of game with idfferent type curves
-      // parameter is array
-      // choices: {
-      //   type: jsPsych.plugins.parameterType.KEY,
-      //   array: true,
-      //   pretty_name: 'Choices',
-      //   default: jsPsych.ALL_KEYS,
-      //   description: 'The keys the subject is allowed to press to respond to the stimulus.'
-      // }
-      // disruption: {
-      //   type: jsPsych.plugins.parameterType.KEYCODE, // BOOL, STRING, INT, FLOAT, FUNCTION, KEY, SELECT, HTML_STRING, IMAGE, AUDIO, VIDEO, OBJECT, COMPLEX
-      //   default: 39 // <-
-      // },
     }
   }
 
@@ -94,10 +80,11 @@ jsPsych.plugins["control-game"] = (function() {
     // Pre-Load
     var t = 0;
     var ir = 0;
+    var tir = 100;
     var factor = 10;
     const low_thresh = 80;
     const hi_thresh = 150;
-    const trial_time = 1000*10;
+    const trial_time = 1000*30;
 
     // data saving
     var trial_data = {
@@ -109,37 +96,6 @@ jsPsych.plugins["control-game"] = (function() {
     var bg_array = new Array(96);
     bg_array.fill(100);
     var current_bg = bg_array[0];
-
-    // Game functions
-    function updateCarb(x)	{
-      for (let i = 0; i < 96; i++) {
-        bg_array[i] += (trial.carb_curve[i]*x);
-      }
-    }
-    
-    function updateInsulin(x) {
-      for (let i = 0; i < 96; i++) {
-        bg_array[i] += (trial.insulin_curve[i]*x);
-      }
-    }
-    
-    // Disruption event
-    function disruption(type, amount, intensity, duration)	{
-      if (type == 0) {
-        for (let i = 0; i < amount; i++) {
-          setTimeout(function() {
-            updateInsulin(intensity)
-          }, duration);
-        }
-      }
-      else {
-        for (let i = 0; i < amount; i++) {
-          setTimeout(function() {
-            updateCarb(intensity)
-          }, duration);
-        }
-      }
-    }
     
     // Dot color code
     var color_scale = ["#ff6666","#ccccff","#ffff99", "#000000"];
@@ -157,8 +113,9 @@ jsPsych.plugins["control-game"] = (function() {
 
     function updateGraphics() {
       circle_color = getColor(current_bg);
-      // below line causes Nan at beginning
-      var tir = Math.round(100 * (ir/t),2);
+      if (t > 0) {
+        tir = Math.round(100 * (ir/t),2);
+      }
       display_element.querySelector("#circle").style.width = `${current_bg}px`;
       display_element.querySelector("#circle").style.height = `${current_bg}px`;
       display_element.querySelector("#circle").style.background = circle_color;
@@ -180,22 +137,50 @@ jsPsych.plugins["control-game"] = (function() {
       }
     }
 
+    // Game functions
+    function updateCarb(x)	{
+      for (let i = 0; i < 96; i++) {
+        bg_array[i] += (trial.carb_curve[i]*x);
+      }
+    }
+    
+    function updateInsulin(x) {
+      for (let i = 0; i < 96; i++) {
+        bg_array[i] += (trial.insulin_curve[i]*x);
+      }
+    }
+
+    function runEvent(i) {
+      if (trial.events[i].type == 'lo') {
+        for (let j = 0; j < trial.events[i].stretch; j++) {
+          setTimeout(updateInsulin(trial.events[i].factor, trial.events[i].stretch*1000));
+        }
+      }
+      else if (trial.events[i].type == 'hi') {
+        for (let j = 0; j < trial.events[i].stretch; j++) {
+          setTimeout(updateCarb(trial.events[i].factor, trial.events[i].stretch*1000));
+        }
+      }
+    }
+
     function create_control_game() {
-      // setInterval(function() {
       updateGraphics();
       updateModel();
       updateScore();
-        // runEvent();
-        // add probability function for events
-        // t++;
-      // }, 250);
+      
+      // use trial.events.length and t to determine when to runEvent
+      for (let i = 0; i < trial.events.length; i++) {
+        runEvent(i);
+      }
+      //runEvent();
+      // add probability function for events
     }
 
     var game;
 
     function show_stimulus(){
       var circle_color = getColor(100);
-      display_element.innerHTML = '<div class="container-fluid" style="height: 700px"> <div class="row align-items-end"> <div class="col"> <h3 id = "score"> </h3> </div> </div> <div class="row align-items-center" style="height:300px"> <div class="col align-self-center"> <svg id="circle"> </svg> </div> </div> <div class="row align-items-center"> <div class="col"> <button id="insulin" type="button" class="btn btn-primary"> - </button> <button id="carb" type="button" class="btn btn-primary"> + </button> </div> </div> </div>';
+      display_element.innerHTML = '<div class="container-fluid" style="height: 700px"> <div class="row align-items-end"> <div class="col"> <h3 id = "score"> </h3> </div> </div> <div class="row align-items-center" style="height:300px"> <div class="col align-self-center"> <svg id="circle"> </svg> </div> </div> </div>';
       display_element.querySelector("#circle").style.width = "100px";
       display_element.querySelector("#circle").style.height = "100px";
       display_element.querySelector("#circle").style.background = circle_color;
@@ -203,7 +188,7 @@ jsPsych.plugins["control-game"] = (function() {
       // display_element.querySelector("#carb").addEventListener('click', function() {updateCarb(10)});
       // display_element.querySelector("#insulin").addEventListener('click', function() {updateInsulin(10)});
 
-        // for remembering keyboard response and turning off at end
+      // for remembering keyboard response and turning off at end
       // var keyboardListener = 
       jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
@@ -215,19 +200,19 @@ jsPsych.plugins["control-game"] = (function() {
 
       game = setInterval(function() {
         create_control_game();
-        // runEvent();
-        // add probability function for events
         t++;
       }, 250);
     }
 
     function after_response(response_info){
       rt.push(response_info.rt);
-      response_info.key
-      // if = increase key, do this
-      // call carb function
-      // if = decrease key
-      // call insulin
+
+      if (response_info.key == "arrowleft") {
+        updateInsulin(5);
+      }
+      if (response_info.key == "arrowright") {
+        updateCarb(5);
+      }
       if (response_info.rt - t > trial_time) {
       end_trial();
       }
