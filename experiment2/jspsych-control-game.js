@@ -70,7 +70,7 @@ jsPsych.plugins["control-game"] = (function() {
       events: {
         type: jsPsych.plugins.parameterType.OBJECT,
         // Event architecture {type: 'lo/hi',factor: #,stretch:#}
-        default: [{type:'lo',factor:5,stretch:1},{type:'hi',factor:5,stretch:10}]
+        default: [{type:'lo',factor:10,stretch:1},{type:'hi',factor:10,stretch:10}]
       }
     }
   }
@@ -81,17 +81,18 @@ jsPsych.plugins["control-game"] = (function() {
     var t = 0;
     var ir = 0;
     var tir = 100;
-    var factor = 10;
     const low_thresh = 80;
     const hi_thresh = 150;
     const trial_time = 1000*30;
+    var numEvents = trial.events.length;
 
     // data saving
     var trial_data = {
       timeInRange: ir/t,
-      keys: 'implement'
     };
     var rt = [];
+    var keys = [];
+    var eventTimes = [];
     
     // Data Structure
     var bg_array = new Array(96);
@@ -192,20 +193,37 @@ jsPsych.plugins["control-game"] = (function() {
         allow_held_key: false
       });
 
+      
       // use trial.events.length and t to determine when to runEvent
       var period_length = (trial_time / trial.events.length)/1000;
-      // for (let i = 0; i < trial.events.length; i++) {
-      //   runEvent(i);
-      // }
+      for (let i = 0; i < trial.events.length; i++) {
+        var begin = period_length*i;
+        var end = (period_length*(i+1) - 10);
+        eventTimes.push(Math.floor(Math.random() * (end - begin + 1)) + begin);
+      }
 
       game = setInterval(function() {
         create_control_game();
+        console.log(numEvents);
+        if (numEvents > 0) {
+          for (let i = 0; i < trial.events.length; i++) {
+            if (t == eventTimes[i]) {
+              runEvent(i);
+              numEvents --;
+            }
+          }
+        }
+        if (t == (trial_time/1000)) {
+          end_trial();
+        }
         t += 0.25;
       }, 250);
     }
 
     function after_response(response_info){
       rt.push(response_info.rt);
+      keys.push(response_info.key);
+
 
       if (response_info.key == "arrowleft") {
         updateInsulin(5);
@@ -213,13 +231,12 @@ jsPsych.plugins["control-game"] = (function() {
       if (response_info.key == "arrowright") {
         updateCarb(5);
       }
-      if (response_info.rt - t > trial_time) {
-      end_trial();
-      }
     }
 
     function end_trial(){
       trial_data.rt = JSON.stringify(rt);
+      trial_data.keys = JSON.stringify(keys);
+      trial_data.eventTimes = JSON.stringify(eventTimes);
       clearInterval(game);
 
       // end trial
