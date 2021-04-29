@@ -70,7 +70,7 @@ jsPsych.plugins["control-game"] = (function() {
       events: {
         type: jsPsych.plugins.parameterType.OBJECT,
         // Event architecture {type: 'lo/hi',factor: #,stretch:#}
-        default: [{type:'lo',factor:0,stretch:1},{type:'hi',factor:1,stretch:1}]
+        default: [{type:'lo',factor:0,stretch:1,time:5},{type:'hi',factor:1,stretch:1,time:20}]
       }
     }
   }
@@ -199,22 +199,20 @@ jsPsych.plugins["control-game"] = (function() {
 
       
       // use trial.events.length and t to determine when to runEvent
-      var period_length = (trial_time / trial.events.length)/1000;
-      for (let i = 0; i < trial.events.length; i++) {
-        var begin = period_length*i;
-        var end = (period_length*(i+1) - 10);
-        eventTimes.push(Math.floor(Math.random() * (end - begin + 1)) + begin);
-      }
+      // var period_length = (trial_time / trial.events.length)/1000;
+      // for (let i = 0; i < trial.events.length; i++) {
+      //   var begin = period_length*i;
+      //   var end = (period_length*(i+1) - 10);
+      //   eventTimes.push(Math.floor(Math.random() * (end - begin + 1)) + begin);
+      // }
 
       game = setInterval(function() {
         create_control_game();
         console.log(numEvents);
-        if (numEvents > 0) {
-          for (let i = 0; i < trial.events.length; i++) {
-            if (t == eventTimes[i]) {
-              runEvent(i);
-              numEvents --;
-            }
+        for (let i = 0; i < trial.events.length; i++) {
+          if (t == trial.events[i].time) {
+            runEvent(i);
+            numEvents --;
           }
         }
         if (t == (trial_time/1000)) {

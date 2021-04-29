@@ -54,5 +54,9 @@ jsPsych.init({
     on_finish: function(){
         jsPsych.data.displayData()
     }
+    // For prolific redirect
+    // on_finish: function(){
+    //     window.location = "https://app.prolific.co/submissions/complete?cc=XXXXXXX"
+    // }
 });
 
