@@ -70,7 +70,7 @@ jsPsych.plugins["control-game"] = (function() {
       events: {
         type: jsPsych.plugins.parameterType.OBJECT,
         // Event architecture {type: 'lo/hi',factor: #,stretch:#}
-        default: [{type:'lo',factor:10,stretch:1},{type:'hi',factor:10,stretch:10}]
+        default: [{type:'lo',factor:0,stretch:1},{type:'hi',factor:1,stretch:1}]
       }
     }
   }
@@ -97,6 +97,10 @@ jsPsych.plugins["control-game"] = (function() {
     // Data Structure
     var bg_array = new Array(96);
     bg_array.fill(100);
+    var l = bg_array.length;
+    for (let i = 0; i < l; i++) {
+      bg_array[i] = Math.round(jStat.normal.sample(bg_array[94],3));
+    }
     var current_bg = bg_array[0];
     
     // Dot color code
@@ -128,9 +132,10 @@ jsPsych.plugins["control-game"] = (function() {
       // Take out 1st element
       bg_array.shift(bg_array[0])
       // // Sample next point
-      bg_array.push(Math.round(jStat.normal.sample(bg_array[94],1)))
+      bg_array.push(Math.round(jStat.normal.sample(bg_array[94],3)))
       // // Update global BG
       current_bg = bg_array[0];
+      console.log(current_bg);
     }
     
     function updateScore() {
@@ -141,17 +146,18 @@ jsPsych.plugins["control-game"] = (function() {
 
     // Game functions
     function updateCarb(x)	{
-      for (let i = 0; i < 96; i++) {
-        bg_array[i] += (trial.carb_curve[i]*x);
+      for (let i = 1; i < 96; i++) {
+        bg_array[i] = (bg_array[i-1] + trial.carb_curve[i]*x);
       }
     }
     
     function updateInsulin(x) {
-      for (let i = 0; i < 96; i++) {
-        bg_array[i] += (trial.insulin_curve[i]*x);
+      for (let i = 1; i < 96; i++) {
+        bg_array[i] = (bg_array[i-1] + trial.insulin_curve[i]*x);
       }
     }
 
+    // create var event here to clear timout later
     function runEvent(i) {
       if (trial.events[i].type == 'lo') {
         for (let j = 0; j < trial.events[i].stretch; j++) {
@@ -180,8 +186,6 @@ jsPsych.plugins["control-game"] = (function() {
       display_element.querySelector("#circle").style.height = "100px";
       display_element.querySelector("#circle").style.background = circle_color;
       display_element.querySelector("#score").innerHTML = `100% in range`;
-      // display_element.querySelector("#carb").addEventListener('click', function() {updateCarb(10)});
-      // display_element.querySelector("#insulin").addEventListener('click', function() {updateInsulin(10)});
 
       // for remembering keyboard response and turning off at end
       // var keyboardListener = 
@@ -226,10 +230,10 @@ jsPsych.plugins["control-game"] = (function() {
 
 
       if (response_info.key == "arrowleft") {
-        updateInsulin(5);
+        updateInsulin(1);
       }
       if (response_info.key == "arrowright") {
-        updateCarb(5);
+        updateCarb(1);
       }
     }
 
@@ -237,6 +241,7 @@ jsPsych.plugins["control-game"] = (function() {
       trial_data.rt = JSON.stringify(rt);
       trial_data.keys = JSON.stringify(keys);
       trial_data.eventTimes = JSON.stringify(eventTimes);
+      jsPsych.pluginAPI.cancelAllKeyboardResponses();
       clearInterval(game);
 
       // end trial

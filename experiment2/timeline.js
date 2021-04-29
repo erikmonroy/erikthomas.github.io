@@ -31,8 +31,8 @@ var freeResponse = {
     type: 'survey-text',
     preamble: '<p>Thank you for completing the trial. Below are free-response questions about your experience.<br>Please provide as much detail when possible.</p>',
     questions: [
-        {prompt: "While participating, did the game remind of you of anything from the past? If there are multiple things that come to mind, feel free to list them.", name: 'Any', required:true, rows: 5, columns: 80}, 
-        {prompt: "Is there any knowledge of yours that you felt helped you to perform the experiment?", name: 'Knowledge', required:true, rows: 5, columns: 80}
+        {prompt: 'While participating, did the game remind of you of anything from the past? If there are multiple things that come to mind, feel free to list them.', name: 'Any', required:true, rows: 5, columns: 80}, 
+        {prompt: 'Is there any knowledge of yours that you felt helped you to perform the experiment?', name: 'Knowledge', required:true, rows: 5, columns: 80}
       ],
 };
 timeline.push(freeResponse);
