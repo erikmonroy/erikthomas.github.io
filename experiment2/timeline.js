@@ -20,7 +20,7 @@ var instructions = {
     ],
     show_clickable_nav: false
 }
-timeline.push(instructions);
+// timeline.push(instructions);
 
 var experiment = {
     type: 'control-game'
@@ -35,7 +35,7 @@ var freeResponse = {
         {prompt: 'Is there any knowledge of yours that you felt helped you to perform the experiment?', name: 'Knowledge', required:true, rows: 5, columns: 80}
       ],
 };
-timeline.push(freeResponse);
+// timeline.push(freeResponse);
 
 var questions_options = ["Yes", "No"];
 
@@ -46,7 +46,7 @@ var questions = {
         {prompt: "If you answered yes to the above, do you have experience using diabetes technology other than a blood glucometer (insulin pump, continuous glucose monitor, or software)?", name: 'Tech', options: questions_options, required:false}
     ],
 };
-timeline.push(questions);
+// timeline.push(questions);
 
 /* start the experiment */
 jsPsych.init({
