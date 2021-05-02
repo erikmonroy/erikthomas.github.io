@@ -242,7 +242,8 @@ jsPsych.plugins["control-game"] = (function() {
       events: {
         type: jsPsych.plugins.parameterType.OBJECT,
         // Event architecture {type: 'lo/hi',factor: #,stretch:#}
-        default: [{type:'lo',factor:2,stretch:1,time:30},{type:'hi',factor:3,stretch:1,time:10}]
+        default: [{type:'lo',factor:3,stretch:1,time:1},{type:'lo',factor:0,stretch:1,time:15},
+        {type:'hi',factor:5,stretch:1,time:30},{type:'hi',factor:5,stretch:10,time:50},]
       }
     }
   }
@@ -255,7 +256,7 @@ jsPsych.plugins["control-game"] = (function() {
     var tir = 100;
     const low_thresh = 80;
     const hi_thresh = 150;
-    const trial_time = 1000*60;
+    const trial_time = 1000*75;
     var numEvents = trial.events.length;
 
     // data saving
@@ -271,7 +272,7 @@ jsPsych.plugins["control-game"] = (function() {
     bg_array.fill(100);
     var l = bg_array.length;
     for (let i = 1; i < l; i++) {
-      bg_array[i] = Math.round(jStat.normal.sample(bg_array[i-1],2));
+      bg_array[i] = Math.round(jStat.normal.sample(bg_array[i-1],1));
     }
     var current_bg = bg_array[0];
     
@@ -304,7 +305,7 @@ jsPsych.plugins["control-game"] = (function() {
       // Take out 1st element
       bg_array.shift(bg_array[0])
       // // Sample next point
-      bg_array.push(Math.round(jStat.normal.sample(bg_array[478],3)))
+      bg_array.push(Math.round(jStat.normal.sample(bg_array[478],1)))
       // // Update global BG
       current_bg = bg_array[0];
       console.log(current_bg)
@@ -319,14 +320,19 @@ jsPsych.plugins["control-game"] = (function() {
     // Game functions
     function updateCarb(x)	{
       for (let i = 0; i < 480; i++) {
-        bg_array[i] = (bg_array[i] + trial.carb_curve[i]*x);
-
+        bg_array[i] = Math.round(bg_array[i] + trial.carb_curve[i]*x);
+        if (bg_array[i] > 500) {
+          bg_array[i] = 500;
+        }
       }
     }
     
     function updateInsulin(x) {
       for (let i = 0; i < 480; i++) {
-        bg_array[i] = (bg_array[i] + trial.insulin_curve[i]*x);
+        bg_array[i] = Math.round(bg_array[i] + trial.insulin_curve[i]*x);
+        if (bg_array[i] < 10) {
+          bg_array[i] = 10;
+        }
       }
     }
 
