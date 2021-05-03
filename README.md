@@ -13,7 +13,6 @@ Project is created with:
 * HTML5
 * CSS
 * Javascript
-* D3.js version: 5
 * jStat
 * jsPsych
 
