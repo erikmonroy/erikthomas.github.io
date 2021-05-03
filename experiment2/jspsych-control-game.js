@@ -362,6 +362,11 @@ jsPsych.plugins["control-game"] = (function() {
       display_element.querySelector("#circle").style.background = circle_color;
       display_element.querySelector("#score").innerHTML = `100% in range`;
 
+      // <div class="row align-items-center">
+      //   <div class="col" id = "reminder">
+      //   </div>
+      // </div>
+
       // for remembering keyboard response and turning off at end
       // var keyboardListener = 
       jsPsych.pluginAPI.getKeyboardResponse({
