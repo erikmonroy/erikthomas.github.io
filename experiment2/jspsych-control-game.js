@@ -242,8 +242,8 @@ jsPsych.plugins["control-game"] = (function() {
       events: {
         type: jsPsych.plugins.parameterType.OBJECT,
         // Event architecture {type: 'lo/hi',factor: #,stretch:#}
-        default: [{type:'lo',factor:3,stretch:1,time:1},{type:'lo',factor:0,stretch:1,time:15},
-        {type:'hi',factor:5,stretch:1,time:30},{type:'hi',factor:5,stretch:10,time:50},]
+        default: [{type:'lo',factor:2,time:0},{type:'lo',factor:0.5,time:20},
+        {type:'hi',factor:5,time:30},{type:'hi',factor:5/4,time:50},]
       }
     }
   }
@@ -269,7 +269,7 @@ jsPsych.plugins["control-game"] = (function() {
     
     // Data Structure
     var bg_array = new Array(480);
-    bg_array.fill(100);
+    bg_array.fill(90);
     var l = bg_array.length;
     for (let i = 1; i < l; i++) {
       bg_array[i] = Math.round(jStat.normal.sample(bg_array[i-1],1));
@@ -298,7 +298,7 @@ jsPsych.plugins["control-game"] = (function() {
       display_element.querySelector("#circle").style.width = `${current_bg}px`;
       display_element.querySelector("#circle").style.height = `${current_bg}px`;
       display_element.querySelector("#circle").style.background = circle_color;
-      display_element.querySelector("#score").innerHTML = `${tir}% in range`;
+      display_element.querySelector("#score").innerHTML = `Keep the circle blue!<br><- to shrink || -> to grow`;
     }
 
     function updateModel() {
@@ -339,14 +339,10 @@ jsPsych.plugins["control-game"] = (function() {
     // create var event here to clear timout later
     function runEvent(i) {
       if (trial.events[i].type == 'lo') {
-        for (let j = 0; j < trial.events[i].stretch; j++) {
-          setTimeout(updateInsulin(trial.events[i].factor/trial.events[i].stretch, trial.events[i].stretch*1000));
-        }
+        updateInsulin(trial.events[i].factor);
       }
       else if (trial.events[i].type == 'hi') {
-        for (let j = 0; j < trial.events[i].stretch; j++) {
-          setTimeout(updateCarb(trial.events[i].factor/trial.events[i].stretch, trial.events[i].stretch*1000));
-        }
+        updateCarb(trial.events[i].factor);
       }
     }
 

@@ -37,7 +37,7 @@ var freeResponse = {
         {prompt: 'Is there any knowledge of yours that you felt helped you to perform the experiment?', name: 'Knowledge', required:false, rows: 5, columns: 80}
       ],
 };
-// timeline.push(freeResponse);
+timeline.push(freeResponse);
 
 var questions_options = ["Yes", "No"];
 
@@ -47,7 +47,7 @@ var diabetes_question = {
         {prompt: "Do you have any experience managing diabetes, either your own or another person's?", name: 'Diabetes', options: questions_options, required:true}
     ],
 };
-// timeline.push(diabetes_question);
+timeline.push(diabetes_question);
 
 var diabetes_options = ["Glucometer (finger prick and meter)","Syringe or insulin pen","Continuous Glucose Monitor (CGM)","Insulin pump","Software or mobile app for diabetes"];
 
@@ -72,29 +72,47 @@ var if_node = {
     }
 }
 
-// timeline.push(if_node);
+timeline.push(if_node);
 
 var instructions2 = {
     type: 'instructions',
-    pages: [`"The game you just played simulates a person's response to increasing and decreasing blood sugar levels. Think of the circle as a person's blood sugar, the right arrow as food, and the left arrow as insulin. <br>Specifically, each press of the right arrow key represents 15 carbohydrates, while each press of the left arrow key represents 1 unit of insulin for a person with an insulin sensitivity factor of 50. <br>The blue circle represents a blood sugar between 80 mg/dL and 120mg/dL, or what is considered a normal range. <br>You will now play the game one more time. Following the game you will be redirected to Prolific for study end confirmation. <br> Thank you for your time thus far and good luck! <br><br> Press the right arrow key to begin the final trial."`],
+    pages: [`The game you just played simulates a person's response to increasing and decreasing blood sugar levels. Think of the circle as a person's blood sugar, the right arrow as food, and the left arrow as insulin. 
+        <br>Specifically, each press of the right arrow key represents 15 carbohydrates, while each press of the left arrow key represents 1 unit of insulin for a person with an insulin sensitivity factor of 50. 
+        <br>The blue circle represents a blood sugar between 80 mg/dL and 120mg/dL, or what is considered a normal range. 
+        <br>You will now play the game one more time. Following the game you will be redirected to Prolific for study end confirmation. 
+        <br> Thank you for your time thus far and good luck! <br><br> Press the right arrow key to begin the final trial.`],
     show_clickable_nav: false
 }
-// timeline.push(instructions2);
+timeline.push(instructions2);
 
 var experiment2 = {
     type: 'control-game'
 };
-// timeline.push(experiment2);
+timeline.push(experiment2);
+
+var save_server_data = {
+    type: 'call-function',
+    func: function () {
+      var data = jsPsych.data.get().json();
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'php/save_json.php');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({ filedata: data }));
+    },
+    post_trial_gap: 1000
+  };
+  timeline.push(save_server_data);
 
 /* start the experiment */
 jsPsych.init({
     timeline: timeline,
-    on_finish: function(){
-        jsPsych.data.displayData()
-    }
-    // For prolific redirect
     // on_finish: function(){
-    //     window.location = "https://app.prolific.co/submissions/complete?cc=67D2B26B"
+    //     jsPsych.data.displayData()
     // }
+    // For prolific redirect
+    on_finish: function(){
+        window.location = "https://www.google.com/search?q=workinonit"
+        // "https://app.prolific.co/submissions/complete?cc=67D2B26B"
+    }
 });
 
