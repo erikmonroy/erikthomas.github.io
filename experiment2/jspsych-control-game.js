@@ -298,7 +298,6 @@ jsPsych.plugins["control-game"] = (function() {
       display_element.querySelector("#circle").style.width = `${current_bg}px`;
       display_element.querySelector("#circle").style.height = `${current_bg}px`;
       display_element.querySelector("#circle").style.background = circle_color;
-      display_element.querySelector("#score").innerHTML = `Keep the circle blue!<br><- to shrink || -> to grow`;
     }
 
     function updateModel() {
@@ -356,11 +355,18 @@ jsPsych.plugins["control-game"] = (function() {
 
     function show_stimulus(){
       var circle_color = getColor(100);
-      display_element.innerHTML = '<div class="container-fluid" style="height: 700px"> <div class="row align-items-end"> <div class="col"> <h3 id = "score"> </h3> </div> </div> <div class="row align-items-center" style="height:300px"> <div class="col align-self-center"> <svg id="circle"> </svg> </div> </div> </div>';
+      display_element.innerHTML = `
+        <div style="height: 700px; width: 500px; position: relative;"> 
+        
+          <div style="position: absolute; top:50%; left: 50%; transform: translate(-50%, -50%);">
+            <svg id="circle"></svg>
+          </div>
+          <p>Keep the circle blue!</p>
+          <p style="position: absolute; width: 100%; bottom: 0%;">⬅️ to shrink | ➡️ to grow</p>
+        </div>`;
       display_element.querySelector("#circle").style.width = "100px";
       display_element.querySelector("#circle").style.height = "100px";
       display_element.querySelector("#circle").style.background = circle_color;
-      display_element.querySelector("#score").innerHTML = `100% in range`;
 
       // for remembering keyboard response and turning off at end
       // var keyboardListener = 
