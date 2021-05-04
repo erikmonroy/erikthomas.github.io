@@ -307,7 +307,6 @@ jsPsych.plugins["control-game"] = (function() {
       bg_array.push(Math.round(jStat.normal.sample(bg_array[478],1)))
       // // Update global BG
       current_bg = bg_array[0];
-      console.log(current_bg)
     }
     
     function updateScore() {
@@ -368,13 +367,6 @@ jsPsych.plugins["control-game"] = (function() {
       display_element.querySelector("#circle").style.height = "100px";
       display_element.querySelector("#circle").style.background = circle_color;
 
-      // <div class="row align-items-center">
-      //   <div class="col" id = "reminder">
-      //   </div>
-      // </div>
-
-      // for remembering keyboard response and turning off at end
-      // var keyboardListener = 
       jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
         valid_responses: [trial.increase_key,trial.decrease_key],
@@ -389,7 +381,6 @@ jsPsych.plugins["control-game"] = (function() {
           if (t == trial.events[i].time) {
             runEvent(i);
             numEvents --;
-            console.log(numEvents);
           }
         }
         if (t == (trial_time/1000)) {
