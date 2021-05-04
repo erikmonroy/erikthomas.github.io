@@ -1,3 +1,14 @@
+// capture info from Prolific
+var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+
+jsPsych.data.addProperties({
+    subject_id: subject_id,
+    study_id: study_id,
+    session_id: session_id
+});
+
 /* create timeline */
 var timeline = [];
 
@@ -42,7 +53,7 @@ var freeResponse = {
     preamble: '<p>Thank you for completing the trial. Below are free-response questions about your experience.<br>Please provide as much detail when possible.</p>',
     questions: [
         {prompt: "Did you notice anything about the circle's size in relation to pressing the arrow keys?", name: 'Arrows', required:false, rows: 5, columns: 80},
-        {prompt: 'While participating, did the game remind of you of anything? <br>If there are multiple things that come to mind, feel free to list them. If nothing comes to mind, you may skip.', name: 'Any', required:false, rows: 5, columns: 80}, 
+        {prompt: 'While participating, did the game remind of you of anything? <br>If there are multiple things that come to mind, feel free to list them. If nothing comes to mind, you may skip.', name: 'Remind', required:false, rows: 5, columns: 80}, 
         {prompt: 'Is there any knowledge of yours that you felt helped you to perform the experiment?', name: 'Knowledge', required:false, rows: 5, columns: 80}
       ],
 };
@@ -117,13 +128,9 @@ timeline.push(save_server_data);
 /* start the experiment */
 jsPsych.init({
     timeline: timeline,
-    // on_finish: function(){
-    //     jsPsych.data.displayData()
-    // }
     // For prolific redirect
     on_finish: function(){
-        window.location = "https://www.google.com/search?q=workinonit"
-        // "https://app.prolific.co/submissions/complete?cc=67D2B26B"
+        window.location = "https://app.prolific.co/submissions/complete?cc=67D2B26B"
     }
 });
 
