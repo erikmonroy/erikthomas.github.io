@@ -261,11 +261,11 @@ jsPsych.plugins["control-game"] = (function() {
 
     // data saving
     var trial_data = {
-      timeInRange: ir/t,
     };
     var rt = [];
     var keys = [];
-    var events = [];
+    var data_array = [];
+    var time_array = [];
     
     // Data Structure
     var bg_array = new Array(480);
@@ -275,6 +275,8 @@ jsPsych.plugins["control-game"] = (function() {
       bg_array[i] = Math.round(jStat.normal.sample(bg_array[i-1],1));
     }
     var current_bg = bg_array[0];
+    data_array.push(current_bg);
+    time_array.push(performance.now())
     
     // Dot color code
     var color_scale = ["#ff6666","#ccccff","#ffff99", "#000000"];
@@ -307,6 +309,9 @@ jsPsych.plugins["control-game"] = (function() {
       bg_array.push(Math.round(jStat.normal.sample(bg_array[478],1)))
       // // Update global BG
       current_bg = bg_array[0];
+      // Always keep track of participant's data
+      data_array.push(current_bg);
+      time_array.push(performance.now())
     }
     
     function updateScore() {
@@ -407,6 +412,8 @@ jsPsych.plugins["control-game"] = (function() {
       trial_data.rt = JSON.stringify(rt);
       trial_data.keys = JSON.stringify(keys);
       trial_data.events = JSON.stringify(trial.events);
+      trial_data.bg = JSON.stringify(data_array);
+      trial_data.time = JSON.stringify(time_array);
       jsPsych.pluginAPI.cancelAllKeyboardResponses();
       clearInterval(game);
 
