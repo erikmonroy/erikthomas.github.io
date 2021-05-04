@@ -8,20 +8,29 @@ var instructions = {
     pages: [
         'Welcome to the experiment. Press the right arrow key to continue.',
         `In this experiment, a circle will appear in the center 
-        of the screen. Your objective is to keep the circle within range.
-        <br><br> You will have a gauge of whether the circle is in range by both:
-        <br>1. The <b>color</b> of the circle, and
-        <br>2. The <b>time in range</b> measure above the circle.
-        <br><br> While the circle is outside of the preferred range, your time in range score will decrease until it returns to within range (in the blue).
+        of the screen, shown below:
+        <br> <img src="images/dot.png"></img>
+        <br>Your objective is to keep the circle blue, or within range.
         <br><br>Press the right arrow key to continue.`,
-        'Here is an example of the circle within range:<br><img src="images/dot_IR.png"></img><br>While within range (in the blue), your time in range will either increase or maintain itself at 100%<br><br>Press the right arrow key to continue.',
-        'Here is an example of the circle below range:<br><img src="images/dot_lo.png"></img><br>While below range (in the red), your time in range will decrease until it returns within range.<br>If the circle is below range, use the right arrow key (->) to enlargen the circle and return it to blue, or within range.  <br><br>Press the right arrow key to continue.',
-        'Here is an example of the circle above range:<br><img src="images/dot_hi.png"></img><br>While above range (in the yellow), your time in range will decrease until it returns within range.<br>If the circle is above range, use the left arrow key (<-) to shrink the circle and return it to blue, or within range. <br><br>Press the right arrow key to continue.',
-        `Your task is to keep the circle blue, or within range, as much as possible.<br>Following the trial, you will answer some questions about your experience and be served a prompt. <br>Once you finish the entire experiment, your page will be redirected to Prolific for confirmation. <br>Thank you for your participation and good luck!  <br><br>Press the right arrow key to begin.`
+        `Here is an example of the circle below range:
+        <br><img src="images/dot_lo.png"></img>
+        <br>While below range (in the red), use the right arrow key ➡️ to enlargen the circle and return it to blue, or within range.
+        <br>Note that there is a delay in the effect.
+        <br><br>Press the right arrow key to continue.`,
+        `Here is an example of the circle above range:
+        <br><img src="images/dot_hi.png"></img>
+        <br>While above range (in the yellow), use the left arrow key ⬅️ to shrink the circle and return it to blue, or within range.
+        <br>Note that there is a delay in the effect.
+        <br><br>Press the right arrow key to continue.`,
+        `Your task is to keep the circle blue, or within range, as much as possible.
+        <br>Following the trial, you will answer some questions about your experience and try the experiment once more.
+        <br><br>Once you finish the entire experiment, your page will be redirected to Prolific for confirmation. 
+        <br>Thank you for your participation and good luck!
+        <br><br>Press the right arrow key to begin.`
     ],
     show_clickable_nav: false
 }
-// timeline.push(instructions);
+timeline.push(instructions);
 
 var experiment1 = {
     type: 'control-game'
@@ -76,10 +85,12 @@ timeline.push(if_node);
 
 var instructions2 = {
     type: 'instructions',
-    pages: [`The game you just played simulates a person's response to increasing and decreasing blood sugar levels. Think of the circle as a person's blood sugar, the right arrow as food, and the left arrow as insulin. 
-        <br>Specifically, each press of the right arrow key represents 15 carbohydrates, while each press of the left arrow key represents 1 unit of insulin for a person with an insulin sensitivity factor of 50. 
-        <br>The blue circle represents a blood sugar between 80 mg/dL and 120mg/dL, or what is considered a normal range. 
-        <br>You will now play the game one more time. Following the game you will be redirected to Prolific for study end confirmation. 
+    pages: [`The game you just played simulates diabetes.
+        <br>The circle represents the concentration of sugar in the blood.
+        <br><br>The right arrow key (➡️) represents insulin, which is a medication that decreases blood sugar. Insulin's effect has a delay.
+        <br><br>The left arrow key (⬅️) represents a candy, which increases blood sugar. The effect of candy on blood sugar also has a delay.
+        <br><br>You will now play the game one more time.
+        <br>Following the game you will be redirected to Prolific for study end confirmation. 
         <br> Thank you for your time thus far and good luck! <br><br> Press the right arrow key to begin the final trial.`],
     show_clickable_nav: false
 }
@@ -100,8 +111,8 @@ var save_server_data = {
       xhr.send(JSON.stringify({ filedata: data }));
     },
     post_trial_gap: 1000
-  };
-  timeline.push(save_server_data);
+};
+timeline.push(save_server_data);
 
 /* start the experiment */
 jsPsych.init({

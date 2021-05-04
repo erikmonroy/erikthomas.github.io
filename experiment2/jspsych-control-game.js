@@ -293,7 +293,7 @@ jsPsych.plugins["control-game"] = (function() {
     function updateGraphics() {
       circle_color = getColor(current_bg);
       if (t > 0) {
-        tir = Math.round(100 * (ir/t),2);
+        tir = ir/t;
       }
       display_element.querySelector("#circle").style.width = `${current_bg}px`;
       display_element.querySelector("#circle").style.height = `${current_bg}px`;
