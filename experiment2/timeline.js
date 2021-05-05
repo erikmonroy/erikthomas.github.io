@@ -114,7 +114,7 @@ var instructions2 = {
 timeline.push(instructions2);
 
 var experiment2 = {
-    type: 'control-game'
+    type: 'control-game',
     events: [{type:'hi',factor:2,time:0},{type:'lo',factor:2,time:45},]
 };
 timeline.push(experiment2);
