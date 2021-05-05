@@ -45,7 +45,8 @@ var instructions = {
         <br>Thank you for your participation and good luck!
         <br><br>Press the right arrow key to begin.`
     ],
-    show_clickable_nav: false
+    show_clickable_nav: false,
+    post_trial_gap: 750
 }
 timeline.push(instructions);
 
@@ -56,10 +57,11 @@ timeline.push(experiment1);
 
 var freeResponse1 = {
     type: 'survey-text',
-    preamble: '<p>Thank you for completing the trial. Following up are free-response questions about your experience.<br>Please provide as much detail when possible. <br>Question 1.</p>',
+    preamble: '<p>Thank you for completing the trial. To follow are 3 free-response questions about your experience.<br>Please provide as much detail when possible. <br><br>Question 1.</p>',
     questions: [
         {prompt: "Describe what you think the relationship is between pressing the keys and changes in the circle's size. If nothing comes to mind, you may skip.", name: 'Relation', required:false, rows: 5, columns: 80}
       ],
+    post_trial_gap: 750
 };
 timeline.push(freeResponse1);
 
@@ -69,6 +71,7 @@ var freeResponse2 = {
     questions: [
         {prompt: 'While participating, did the game remind of you of anything? <br>If there are multiple things that come to mind, feel free to list them. If nothing comes to mind, you may skip.', name: 'Remind', required:false, rows: 5, columns: 80} 
       ],
+    post_trial_gap: 750
 };
 timeline.push(freeResponse2);
 
@@ -78,6 +81,7 @@ var freeResponse3 = {
     questions: [ 
         {prompt: 'Is there any knowledge of yours that you felt helped you to perform the experiment? If nothing comes to mind, you may skip', name: 'Knowledge', required:false, rows: 5, columns: 80}
       ],
+    post_trial_gap: 750
 };
 timeline.push(freeResponse3);
 
@@ -88,6 +92,7 @@ var diabetes_question = {
     questions: [
         {prompt: "Do you have any experience managing diabetes, either your own or another person's?", name: 'Diabetes', options: questions_options, required:true}
     ],
+    post_trial_gap: 750
 };
 timeline.push(diabetes_question);
 
@@ -98,6 +103,7 @@ var tech_question = {
     questions: [
         {prompt: "Please select from the following list all of those which you have experience with:", name: 'Tech', options: diabetes_options, required:false}
     ],
+    post_trial_gap: 750
 };
 
 var if_node = {
@@ -125,7 +131,8 @@ var instructions2 = {
         <br><br>You will now play the game one more time.
         <br>Following the game you will have the opportunity to return to Prolific for study end confirmation. 
         <br> Thank you for your time thus far and good luck! <br><br> Press the right arrow key to begin the final trial.`],
-    show_clickable_nav: false
+    show_clickable_nav: false,
+    post_trial_gap: 750
 }
 timeline.push(instructions2);
 
