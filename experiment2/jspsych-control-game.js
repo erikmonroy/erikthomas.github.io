@@ -255,7 +255,7 @@ jsPsych.plugins["control-game"] = (function() {
     var tir = 100;
     const low_thresh = 80;
     const hi_thresh = 150;
-    const trial_time = 1000*2;
+    const trial_time = 1000*90;
     var numEvents = trial.events.length;
 
     // data saving
