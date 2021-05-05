@@ -54,16 +54,32 @@ var experiment1 = {
 };
 timeline.push(experiment1);
 
-var freeResponse = {
+var freeResponse1 = {
     type: 'survey-text',
-    preamble: '<p>Thank you for completing the trial. Below are free-response questions about your experience.<br>Please provide as much detail when possible.</p>',
+    preamble: '<p>Thank you for completing the trial. Following up are free-response questions about your experience.<br>Please provide as much detail when possible. <br>Question 1.</p>',
     questions: [
-        {prompt: "Did you notice anything about the circle's size in relation to pressing the arrow keys?", name: 'Arrows', required:false, rows: 5, columns: 80},
-        {prompt: 'While participating, did the game remind of you of anything? <br>If there are multiple things that come to mind, feel free to list them. If nothing comes to mind, you may skip.', name: 'Remind', required:false, rows: 5, columns: 80}, 
-        {prompt: 'Is there any knowledge of yours that you felt helped you to perform the experiment?', name: 'Knowledge', required:false, rows: 5, columns: 80}
+        {prompt: "Describe what you think the relationship is between pressing the keys and changes in the circle's size. If nothing comes to mind, you may skip.", name: 'Relation', required:false, rows: 5, columns: 80}
       ],
 };
-timeline.push(freeResponse);
+timeline.push(freeResponse1);
+
+var freeResponse2 = {
+    type: 'survey-text',
+    preamble: '<p>Question 2.</p>',
+    questions: [
+        {prompt: 'While participating, did the game remind of you of anything? <br>If there are multiple things that come to mind, feel free to list them. If nothing comes to mind, you may skip.', name: 'Remind', required:false, rows: 5, columns: 80} 
+      ],
+};
+timeline.push(freeResponse2);
+
+var freeResponse3 = {
+    type: 'survey-text',
+    preamble: '<p>Question 3.</p>',
+    questions: [ 
+        {prompt: 'Is there any knowledge of yours that you felt helped you to perform the experiment? If nothing comes to mind, you may skip', name: 'Knowledge', required:false, rows: 5, columns: 80}
+      ],
+};
+timeline.push(freeResponse3);
 
 var questions_options = ["Yes", "No"];
 
