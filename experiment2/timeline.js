@@ -107,7 +107,7 @@ var instructions2 = {
         <br><br>The left arrow key (⬅️) represents insulin, which is a medication that decreases blood sugar. Insulin's effect has a delay.
         <br><br>The right arrow key (➡️) represents a candy, which increases blood sugar. The effect of candy on blood sugar also has a delay.
         <br><br>You will now play the game one more time.
-        <br>Following the game you will be redirected to Prolific for study end confirmation. 
+        <br>Following the game you will have the opportunity to return to Prolific for study end confirmation. 
         <br> Thank you for your time thus far and good luck! <br><br> Press the right arrow key to begin the final trial.`],
     show_clickable_nav: false
 }
@@ -115,7 +115,7 @@ timeline.push(instructions2);
 
 var experiment2 = {
     type: 'control-game',
-    events: [{type:'hi',factor:2,time:0},{type:'lo',factor:2,time:45},]
+    events: [{type:'hi',factor:2,time:0},{type:'lo',factor:2,time:45}]
 };
 timeline.push(experiment2);
 
@@ -135,10 +135,8 @@ timeline.push(save_server_data);
 var explain = {
     type: 'html-keyboard-response',
     stimulus: `<p>You have successfully completed the experiment.
-        <br><br>This experiemnt was designed to test the performance differences between people with and without diabetes.
-        <br>As a person with diabetes myself, I’m well aware of the lifestyle changes associated with the disease.
-        <br>The game you just played was meant to model the system of diabetes, and see if people with versus without diabetes perform differently.
-        <br>The experiment is intended to see if people with diabetes transfer their learning to a new task with underlying similarities.
+        <br><br>This experiement was designed to test the performance differences between people with and without diabetes,<br>and the game you just played was meant to model the system of diabetes.
+        <br><br>The experiment is intended to see if people with diabetes transfer their learning to a new task with underlying similarities.
         <br>The data that controlled the circle's size was blood sugar data.
         <br>The buttons you pressed corresponded with 1 unit of insulin and 15 grams of carbs.
         <br><br> I sincerely thank you for taking the time to complete this experiment.</p>
