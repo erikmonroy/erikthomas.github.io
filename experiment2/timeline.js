@@ -119,12 +119,6 @@ var experiment2 = {
 };
 timeline.push(experiment2);
 
-var explain = {
-    type: 'instructions',
-    pages: [`Thank you for participating in the experiment.
-        <br><br>`]
-}
-
 var save_server_data = {
     type: 'call-function',
     func: function () {
@@ -138,12 +132,23 @@ var save_server_data = {
 };
 timeline.push(save_server_data);
 
+var explain = {
+    type: 'html-keyboard-response',
+    stimulus: `<p>You have successfully completed the experiment.
+        <br><br>This experiemnt was designed to test the performance differences between people with and without diabetes.
+        <br>As a person with diabetes myself, I’m well aware of the lifestyle changes associated with the disease.
+        <br>The game you just played was meant to model the system of diabetes, and see if people with versus without diabetes perform differently.
+        <br>The experiment is intended to see if people with diabetes transfer their learning to a new task with underlying similarities.
+        <br>The data that controlled the circle's size was blood sugar data.
+        <br>The buttons you pressed corresponded with 1 unit of insulin and 15 grams of carbs.
+        <br><br> I sincerely thank you for taking the time to complete this experiment.</p>
+        <p><a href="https://app.prolific.co/submissions/complete?cc=67D2B26B">Click here to return to Prolific and complete the study</a>.</p>`,
+    choices: jsPsych.NO_KEYS
+}
+timeline.push(explain);
+
 /* start the experiment */
 jsPsych.init({
-    timeline: timeline,
-    // For prolific redirect
-    on_finish: function(){
-        window.location = "https://app.prolific.co/submissions/complete?cc=67D2B26B"
-    }
+    timeline: timeline
 });
 
