@@ -14,6 +14,12 @@ var timeline = [];
 
 /* define welcome message trial */
 
+var preload = {
+    type: 'preload',
+    images: ['images/dot.png', 'images/dot_lo.png','images/dot_hi.png']
+  }
+  timeline.push(preload);
+
 var instructions = {
     type: 'instructions',
     pages: [
@@ -98,8 +104,8 @@ var instructions2 = {
     type: 'instructions',
     pages: [`The game you just played simulates diabetes.
         <br>The circle represents the concentration of sugar in the blood.
-        <br><br>The right arrow key (➡️) represents insulin, which is a medication that decreases blood sugar. Insulin's effect has a delay.
-        <br><br>The left arrow key (⬅️) represents a candy, which increases blood sugar. The effect of candy on blood sugar also has a delay.
+        <br><br>The left arrow key (⬅️) represents insulin, which is a medication that decreases blood sugar. Insulin's effect has a delay.
+        <br><br>The right arrow key (➡️) represents a candy, which increases blood sugar. The effect of candy on blood sugar also has a delay.
         <br><br>You will now play the game one more time.
         <br>Following the game you will be redirected to Prolific for study end confirmation. 
         <br> Thank you for your time thus far and good luck! <br><br> Press the right arrow key to begin the final trial.`],
@@ -109,8 +115,15 @@ timeline.push(instructions2);
 
 var experiment2 = {
     type: 'control-game'
+    events: [{type:'hi',factor:2,time:0},{type:'lo',factor:2,time:45},]
 };
 timeline.push(experiment2);
+
+var explain = {
+    type: 'instructions',
+    pages: [`Thank you for participating in the experiment.
+        <br><br>`]
+}
 
 var save_server_data = {
     type: 'call-function',

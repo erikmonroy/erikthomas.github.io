@@ -242,8 +242,7 @@ jsPsych.plugins["control-game"] = (function() {
       events: {
         type: jsPsych.plugins.parameterType.OBJECT,
         // Event architecture {type: 'lo/hi',factor: #,stretch:#}
-        default: [{type:'lo',factor:2,time:0},{type:'lo',factor:0.5,time:20},
-        {type:'hi',factor:5,time:30},{type:'hi',factor:5/4,time:50},]
+        default: [{type:'lo',factor:2,time:0},{type:'hi',factor:2,time:45},]
       }
     }
   }
@@ -256,7 +255,7 @@ jsPsych.plugins["control-game"] = (function() {
     var tir = 100;
     const low_thresh = 80;
     const hi_thresh = 150;
-    const trial_time = 1000*75;
+    const trial_time = 1000*90;
     var numEvents = trial.events.length;
 
     // data saving
